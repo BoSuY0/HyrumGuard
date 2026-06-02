@@ -65,7 +65,7 @@ Stop condition: keep opening the next small batch after DB-3 unless the user exp
 - [x] DB-0 Durable goal/spec/plan/control state reflects doctor batch scope and is committed.
 - [x] DB-1 CLI `doctor` renders selected config/artifact diagnostics in Markdown and JSON.
 - [x] DB-2 Docs explain local diagnostics and current architecture boundaries.
-- [ ] DB-3 Batch regression gates pass: pytest, ruff, mypy, build, twine check, and CLI smoke.
+- [x] DB-3 Batch regression gates pass: pytest, ruff, mypy, build, twine check, and CLI smoke.
 </done_when>
 
 <feedback_loop>
@@ -159,10 +159,11 @@ Interim responses should report the current task, commit hash, and verification 
 - 2026-06-02, DB-0 verified. evidence: commit `7b7363e` opened doctor batch in `GOAL.md`, `SPEC.md`, `PLAN.md`, `CONTROL.md`, `ATTEMPTS.md`, and `NOTES.md`; `git diff --check` passed.
 - 2026-06-02, DB-1 verified. evidence: focused doctor tests passed with `7 passed`; full pytest `48 passed`; ruff clean; mypy clean.
 - 2026-06-02, DB-2 verified. evidence: `README.md` documents `doctor`; `docs/reference/architecture.md` includes `hyrumguard.doctor` and local diagnostics boundaries.
+- 2026-06-02, DB-3 verified. evidence: pytest `48 passed`; ruff clean; mypy clean; build created wheel/sdist; twine check PASSED; CLI help smoke `all-help-ok 10`; fixture flow with doctor JSON report exited 0.
 
 ### In Progress
 
-- 2026-06-02, DB-3 in progress. Bridge: run full release-style gates and commit doctor batch close evidence.
+- 2026-06-02, next batch opening in progress. Bridge: define the next measurable hardening batch, then continue with TDD.
 
 ### Blockers / Open Questions
 
@@ -177,3 +178,4 @@ Interim responses should report the current task, commit hash, and verification 
 - 2026-06-02, Explainability batch closed locally; next batch should improve operational readiness.
 - 2026-06-02, Doctor batch selected to improve local setup and CI-readiness diagnostics.
 - 2026-06-02, Doctor RED failed on missing `hyrumguard.doctor` module; GREEN focused doctor suite passed with `7 passed`.
+- 2026-06-02, Doctor batch closed locally; next batch should further stabilize artifact ergonomics or schema structure.

@@ -38,3 +38,4 @@
 - Doctor RED: focused tests failed at collection because `hyrumguard.doctor` did not exist and CLI `doctor` was not registered.
 - Doctor GREEN: focused tests for valid config diagnostics, missing artifact failure, Markdown/JSON rendering, CLI return codes, and `--out` passed with `7 passed`.
 - Doctor broader gates: full pytest passed with `48 passed`; `ruff check .` passed; `mypy hyrumguard` passed.
+- Doctor batch close gates: build succeeded, `twine check dist/*` passed, CLI help smoke returned `all-help-ok 10`, and fixture flow wrote a passing doctor JSON report with 6 checks.

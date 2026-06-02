@@ -20,3 +20,4 @@
 - Explainability batch closed locally with release-style gates. Do not call the goal complete; choose another focused batch.
 - Doctor should reuse existing validators and report failures as data. It should not replace `validate`; it should make setup/readiness easier to scan.
 - `doctor` returns exit code 1 for failed checks while still printing a structured report; this differs from validation exceptions returning 2.
+- Doctor batch closed locally with release-style gates. The active goal remains user-controlled and should not be marked complete.
