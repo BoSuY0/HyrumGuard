@@ -1,23 +1,25 @@
 <goal>
-Finish HyrumGuard as a stable public release: a public GitHub repository `BoSuY0/HyrumGuard` with committed source, passing release gates, tag `v1.0.0`, a public GitHub Release containing the verified wheel and sdist assets, and documentation/automation that makes future PyPI publication explicit without falsely claiming PyPI upload when credentials are unavailable.
+Continuously harden HyrumGuard with user-visible functionality, broad regression tests, and cleaner architecture until the user explicitly ends the loop. The current batch focuses on policy-based risk suppression, a first-run project initializer, and regression coverage that keeps release gates stable.
 </goal>
 
 <context>
 Canonical inputs:
 - `/home/tetra/Downloads/deep-research-report.md`
-- `SPEC.md`
-- `README.md`
 - `AGENTS.md`
+- `SPEC.md`
 - `PLAN.md`
 - `CONTROL.md`
+- `README.md`
+- `docs/reference/*`
 
-Current evidence observed on 2026-06-02:
-- GitHub CLI is installed and authenticated as active account `BoSuY0` with `repo` and `workflow` scopes.
-- `gh repo view BoSuY0/HyrumGuard` and `BoSuY0/hyrumguard` did not resolve, so the target repo name appears available.
-- Local repo has no commits, no tags, and no remote before public-release work.
-- `pip index versions hyrumguard` returned `No matching distribution found for hyrumguard`; this is only a package-name availability signal, not PyPI publication.
-- `twine` was not installed before public-release work.
-- No Graphify artifacts or callable Graphify MCP tools were available; normal repo inspection is the fallback.
+Current product baseline:
+- Public repo: `https://github.com/BoSuY0/HyrumGuard`
+- Public release: `v1.0.0`
+- Package version: `1.0.0`
+- Existing CLI commands: `discover`, `infer`, `check`, `canary`, `report`, `validate`
+- Existing local gates: pytest, ruff, mypy, build, twine check, CLI help smoke, fixture smoke flow
+- Public GitHub Actions are blocked by an external billing lock before jobs start; local gates remain the trusted feedback loop until the account state is fixed.
+- No Graphify artifacts or callable Graphify MCP tools are currently available in this repo; normal repo inspection is the fallback.
 
 Useful commands:
 - `.venv/bin/python -m pytest -q`
@@ -27,104 +29,104 @@ Useful commands:
 - `.venv/bin/python -m twine check dist/*`
 - `.venv/bin/python -m hyrumguard.cli --help`
 - `git status --short --branch`
-- `gh repo view BoSuY0/HyrumGuard --json nameWithOwner,visibility,url`
-- `gh release view v1.0.0 --repo BoSuY0/HyrumGuard --json tagName,url,isDraft,isPrerelease`
 </context>
 
 <constraints>
-- Public release is GitHub-public by default: source repository plus GitHub Release assets. Do not claim PyPI publication unless a real PyPI/TestPyPI upload succeeds and is verified.
-- Preserve the research report's core product: downstream discovery, implicit usage mining, shadow contracts, PR-time risk analysis, changed-only canary, and maintainer-facing reports.
-- Do not add hosted service, GitHub App backend, GitLab App backend, or new language ecosystems.
-- Canary execution remains dry-run by default. Real downstream execution requires explicit unsafe acknowledgement.
-- Keep generated runtime outputs out of git. `dist/` stays ignored and is uploaded as release assets, not committed.
-- Use the Lore Commit Protocol for commits; no local `docs/lore-commit-protocol.md` exists, so use the fallback format from `AGENTS.md`.
+- Respond to the user in Ukrainian.
+- Follow `AGENTS.md` and the invoked goal skills.
+- Use TDD for production feature work: failing test first, targeted green, then broader gates.
+- Use `apply_patch` for manual edits.
+- Commit after each completed task or TODO using the Lore Commit Protocol fallback from `AGENTS.md`.
+- Preserve unrelated user changes and keep generated runtime outputs out of git.
+- Do not add hosted services, GitHub App backends, GitLab App backends, or new language ecosystems without explicit approval.
+- Canary execution remains dry-run by default; real downstream execution still requires explicit unsafe acknowledgement.
+- Do not call `update_goal complete` while the user has asked the loop to continue. Complete only after the user explicitly ends the work and the latest accepted batch has fresh verification evidence.
 </constraints>
 
 <scorecard>
-Primary score: public-release acceptance checklist below.
+Primary score: committed, verified improvement tasks per batch.
 
-Passing threshold:
-- Every `done_when` item is checked with evidence in Progress.
-- Local release gates pass.
-- Public GitHub repository is visible.
-- Public GitHub release `v1.0.0` is visible and has wheel/sdist assets.
+Passing threshold for each task:
+- At least one observable product, architecture, documentation, or test outcome is completed.
+- Relevant focused tests pass in the current repo state.
+- Broader regression gates run when the change can affect shared behavior.
+- A Lore-style commit exists after the task.
 
-Regression checks:
-- `.venv/bin/python -m pytest -q`
-- `.venv/bin/python -m ruff check .`
-- `.venv/bin/python -m mypy hyrumguard`
-- `rm -rf dist build hyrumguard.egg-info && .venv/bin/python -m build`
-- `.venv/bin/python -m twine check dist/*`
-- CLI help smoke for all subcommands
-- fixture smoke flow with `validate`
-- `gh repo view BoSuY0/HyrumGuard --json nameWithOwner,visibility,url`
-- `gh release view v1.0.0 --repo BoSuY0/HyrumGuard --json tagName,url,isDraft,isPrerelease`
+Current batch acceptance:
+- CB-0 Goal-loop state is updated from completed public release mode to continuous hardening mode.
+- CB-1 Risk suppression policy is implemented and tested across config loading, analysis, reporting, validation, and CLI behavior.
+- CB-2 First-run initialization is implemented and tested so users can generate a starter config safely.
+- CB-3 Architecture/structure docs are updated to describe the new policy and initialization flow.
+- CB-4 Full local gates pass after the batch.
 
-Stop condition: call `update_goal complete` only when the public release evidence proves every item.
+Stop condition: keep opening the next small batch after CB-4 unless the user explicitly tells Codex to stop or finish.
 </scorecard>
 
 <done_when>
-- [x] PR-0.1 Stable local release candidate exists with passing tests, lint, type check, build, CLI help, fixture flow, and wheel/sdist artifacts.
-- [x] PR-1.1 `GOAL.md`, `SPEC.md`, `PLAN.md`, `CONTROL.md`, `README.md`, and release docs describe stable public GitHub release scope and PyPI boundary consistently.
-- [x] PR-1.2 Project metadata URLs point to the actual public repository `https://github.com/BoSuY0/HyrumGuard`.
-- [x] PR-1.3 Release automation exists for tag-triggered GitHub release asset upload and documented optional PyPI publication.
-- [x] PR-2.1 Public-release readiness tests cover metadata URLs, release docs, release workflow, twine check prerequisites, and existing stable product gates.
-- [x] PR-2.2 Final local gates pass: pytest, ruff, mypy, build, twine check, CLI help, fixture flow.
-- [x] PR-3.1 Initial release commit exists with Lore Commit Protocol message.
-- [x] PR-3.2 Public GitHub repository `BoSuY0/HyrumGuard` exists, is public, and local `origin` points to it.
-- [x] PR-3.3 Default branch is pushed to the public GitHub repository.
-- [x] PR-3.4 Tag `v1.0.0` exists locally and remotely at the release commit.
-- [x] PR-3.5 Public GitHub Release `v1.0.0` exists, is not draft, is not prerelease, and includes `hyrumguard-1.0.0.tar.gz` and `hyrumguard-1.0.0-py3-none-any.whl`.
-- [x] PR-4.1 Completion audit verifies public URLs and release assets from GitHub, not only local files.
+- [ ] CB-0 Durable goal/spec/plan/control state reflects continuous hardening mode and is committed.
+- [ ] CB-1 Suppression policy works from config and reduces/report-marks risks without deleting audit evidence.
+- [ ] CB-2 CLI `init` flow writes a starter `.hyrumguard.yml` safely and refuses to overwrite unless explicitly requested.
+- [ ] CB-3 Docs explain suppressions, initialization, and the current architecture boundaries.
+- [ ] CB-4 Batch regression gates pass: pytest, ruff, mypy, build, twine check, and CLI smoke.
 </done_when>
 
 <feedback_loop>
-Fast check: `.venv/bin/python -m pytest -q tests/test_public_release_readiness.py tests/test_release_readiness.py`
-Expected runtime: under 10 seconds.
-Cadence: after metadata/docs/workflow edits.
-Final check: run every scorecard command before committing, and verify GitHub repo/release after publishing.
+Fast checks:
+- Focused pytest for the feature under development.
+- `.venv/bin/python -m ruff check .`
+
+Expected runtime: focused tests under 10 seconds, full local gates under a few minutes.
+
+Cadence:
+- Run RED before implementation for production features.
+- Run focused GREEN before each task commit.
+- Run full gates after shared architecture or CLI changes and at batch close.
 </feedback_loop>
 
 <workflow>
-1. Re-read `GOAL.md`, `AGENTS.md`, `SPEC.md`, `PLAN.md`, `CONTROL.md`.
-2. Add tests and docs for public release readiness.
-3. Update metadata/workflows/docs until tests pass.
-4. Run full local release gates and rebuild `dist/`.
-5. Commit with Lore Commit Protocol.
-6. Create public GitHub repo if missing, set remote, push branch and tag.
-7. Create public GitHub Release `v1.0.0` with wheel/sdist assets.
-8. Verify public repo/release through `gh` and, if needed, web URLs.
-9. Update Progress evidence and complete only when public evidence proves every item.
+1. Re-read `GOAL.md`, `AGENTS.md`, `SPEC.md`, `PLAN.md`, and `CONTROL.md`.
+2. Pick the next unchecked current-batch item.
+3. Inspect the real source and tests before naming integration points.
+4. For production behavior, write the failing test first and verify it fails for the intended reason.
+5. Implement the smallest coherent change, then run focused tests.
+6. Update docs and working memory where the task changes user-visible behavior.
+7. Run verification appropriate to the blast radius.
+8. Commit that task with a Lore Commit Protocol fallback message.
+9. Update Progress and continue to the next task.
 </workflow>
 
 <working_memory>
 Maintain:
-- `PLAN.md`
-- `ATTEMPTS.md`
-- `NOTES.md`
-- `CONTROL.md`
-
-Update after failed gates, publishing actions, blockers, and completion audit.
+- `GOAL.md` as the canonical goal-loop state tracker.
+- `SPEC.md` as the current product/batch specification.
+- `PLAN.md` as the executable task list.
+- `ATTEMPTS.md` as the compact evidence log for experiments, failures, and gate outcomes.
+- `NOTES.md` as durable observations and decisions.
+- `CONTROL.md` as the user-visible knobs and stop/pivot gates.
 </working_memory>
 
 <human_control_surface>
-`CONTROL.md` lists publish knobs. Public GitHub release is authorized by the active objective. PyPI/TestPyPI upload requires real credentials or trusted-publisher configuration; do not fake it.
+The user controls when this continuous loop ends. Until then, prefer small verified tasks and commits over a single giant refactor.
+
+Require explicit new approval before:
+- publishing to PyPI/TestPyPI
+- adding hosted services or app backends
+- adding more language ecosystems
+- making canary execution blocking by default
+- deleting public release artifacts or rewriting published history
 </human_control_surface>
 
 <verification_loop>
 Focused:
-- `.venv/bin/python -m pytest -q tests/test_public_release_readiness.py tests/test_release_readiness.py`
+- Run the nearest relevant pytest file for each task.
 
-Final:
+Batch close:
 - `.venv/bin/python -m pytest -q`
 - `.venv/bin/python -m ruff check .`
 - `.venv/bin/python -m mypy hyrumguard`
 - `rm -rf dist build hyrumguard.egg-info && .venv/bin/python -m build`
 - `.venv/bin/python -m twine check dist/*`
-- CLI help smoke
-- fixture smoke flow with validation
-- `gh repo view BoSuY0/HyrumGuard --json nameWithOwner,visibility,url`
-- `gh release view v1.0.0 --repo BoSuY0/HyrumGuard --json tagName,url,isDraft,isPrerelease`
+- CLI help smoke for every subcommand
 </verification_loop>
 
 <execution_rules>
@@ -132,46 +134,31 @@ Final:
 - Preserve unrelated user changes.
 - Prefer `rg` over `grep`.
 - Use `apply_patch` for manual edits.
-- Use TDD for release-readiness behavior.
-- Do not publish to PyPI without real credentials and evidence.
-- Do not mark complete if public repo or public release cannot be verified.
+- Use TDD for feature work.
+- Before claiming a task is complete, run fresh verification.
+- After each completed task, commit.
 - Keep final communication concise and in Ukrainian.
 </execution_rules>
 
 <output_contract>
-Final response should include public repository URL, public release URL, release asset names, verification commands, and goal usage after `update_goal complete`.
+Interim responses should report the current task, commit hash, and verification evidence. Final completion is user-controlled; do not call the goal complete while the user is still asking for more work.
 </output_contract>
 
 ## Progress
 
 ### Completed
 
-- 2026-06-02, PR-0.1 verified. evidence: prior stable local release gate passed; `dist/` contains wheel/sdist.
-- 2026-06-02, PR-1.1 verified. evidence: `GOAL.md`, `SPEC.md`, `PLAN.md`, `CONTROL.md`, `README.md`, `docs/reference/release.md` describe public GitHub release and PyPI boundary.
-- 2026-06-02, PR-1.2 verified. evidence: `pyproject.toml` URLs point to `https://github.com/BoSuY0/HyrumGuard`.
-- 2026-06-02, PR-1.3 verified. evidence: `.github/workflows/release.yml` builds, runs `twine check`, uploads GitHub Release assets, and keeps PyPI job opt-in.
-- 2026-06-02, PR-2.1 verified. evidence: `tests/test_public_release_readiness.py` and `tests/test_release_readiness.py`; focused suite -> `11 passed`.
-- 2026-06-02, PR-2.2 verified. evidence: pytest -> `22 passed`; ruff/mypy -> clean; build+twine -> PASSED; CLI help -> `all-help-ok`; fixture flow exited 0.
-- 2026-06-02, PR-3.1 verified. evidence: root commit `3d3e63e` with Lore Commit Protocol fallback message.
-- 2026-06-02, PR-3.2 verified. evidence: `gh repo view BoSuY0/HyrumGuard` -> `visibility: PUBLIC`, URL `https://github.com/BoSuY0/HyrumGuard`; `origin` points to `https://github.com/BoSuY0/HyrumGuard.git`.
-- 2026-06-02, PR-3.3 verified. evidence: `git ls-remote --heads origin` shows `refs/heads/main` at `3d3e63e8896a4c519d0cc8f2a84f7aca601a85fd`.
-- 2026-06-02, PR-3.4 verified. evidence: `git ls-remote --tags origin` shows `refs/tags/v1.0.0` and peeled commit `3d3e63e8896a4c519d0cc8f2a84f7aca601a85fd`.
-- 2026-06-02, PR-3.5 verified. evidence: `gh release view v1.0.0 --repo BoSuY0/HyrumGuard` -> non-draft, non-prerelease, assets `hyrumguard-1.0.0.tar.gz` and `hyrumguard-1.0.0-py3-none-any.whl`.
-- 2026-06-02, PR-4.1 verified. evidence: GitHub API verified public repo URL `https://github.com/BoSuY0/HyrumGuard` and release URL `https://github.com/BoSuY0/HyrumGuard/releases/tag/v1.0.0` with uploaded assets.
-- 2026-06-02, public CI caveat recorded. evidence: GitHub check annotation says the job did not start because the account is locked due to a billing issue; local release gates passed and public release assets are verified.
+- 2026-06-02, prior public-release goal completed. evidence: public repo `BoSuY0/HyrumGuard`, tag/release `v1.0.0`, verified wheel/sdist assets, local gates passed, public CI caveat documented.
 
 ### In Progress
 
-_(none)_
+- 2026-06-02, CB-0 in progress. Bridge: update durable state from public-release mode to continuous hardening mode, then commit.
 
 ### Blockers / Open Questions
 
-- Potential PyPI blocker: no `TWINE_*`/`PYPI_*` credentials were present; public GitHub release is the verified public-release channel unless credentials appear.
-- External CI caveat: GitHub Actions jobs cannot start while the GitHub account is locked due to a billing issue. This does not change the verified public GitHub Release state, but public CI will stay red until account billing is fixed.
+- External CI caveat: GitHub Actions jobs cannot start while the GitHub account is locked due to a billing issue.
+- Active Codex goal tool state is paused, but the user explicitly resumed work in chat; continue working from `GOAL.md` and do not mark complete.
 
 ### Iteration Log
 
-- 2026-06-02 18:00, Inspected public-release prerequisites: GitHub auth exists, repo name appears available, no remote/commits/tags exist, PyPI name appears unused, twine missing. next: add public-release metadata/docs/workflow/tests.
-- 2026-06-02 18:10, Added public-release docs/tests/workflow, updated URLs to `BoSuY0/HyrumGuard`, installed twine, and passed local public-release gates. next: commit, push, tag, and create GitHub Release.
-- 2026-06-02 18:20, Created public repo, pushed `main`, pushed tag `v1.0.0`, created public GitHub Release manually after release workflow startup failure, and verified both release assets. next: push evidence commit and final audit.
-- 2026-06-02 18:25, Verified public CI failures are caused by GitHub account billing lock before job steps start; public repo/release/assets remain verified. next: final completion audit.
+- 2026-06-02, Started continuous hardening loop from a clean `main...origin/main` state after public release evidence commit `26799cd`.

@@ -1,38 +1,37 @@
-# HyrumGuard Public Release Control Surface
+# HyrumGuard Continuous Hardening Control Surface
 
-## Scope
+## Current Mode
 
-- Public repository: `BoSuY0/HyrumGuard`
-- Release tag: `v1.0.0`
-- Release channel: public GitHub repository and GitHub Release assets
-- PyPI/TestPyPI: optional only when credentials or trusted-publisher configuration are actually available
+- Mode: continuous improvement after public `v1.0.0`
+- User stop rule: continue until the user explicitly ends the work
+- Commit rule: commit after each completed task or TODO
+- Verification rule: no completion claim without fresh command evidence
 
-## Safety
+## Current Batch
+
+- CB-0: durable goal/spec/plan/control state
+- CB-1: risk suppression policy
+- CB-2: first-run init command
+- CB-3: docs and architecture notes
+- CB-4: full local regression gates
+
+## Safety Boundaries
 
 - Canary execution default: dry-run
 - Real downstream execution: explicit `--execute --allow-unsafe-execution` only
-- External sandboxing remains required for untrusted downstream execution
-
-## Public Release Gates
-
-Required:
-
-- pytest
-- ruff
-- mypy
-- build
-- twine check
-- CLI help smoke
-- fixture smoke flow
-- public GitHub repo verification
-- public GitHub release verification
-- release asset verification
+- Suppressions must remain auditable and must not silently delete findings
+- Generated runtime outputs stay out of git
 
 ## Pivot Gates
 
 Require explicit new user approval before:
 
-- Publishing to PyPI/TestPyPI if credentials appear but the exact target is ambiguous.
-- Adding hosted services or app backends.
-- Adding more languages/ecosystems.
-- Making canary execution blocking by default.
+- publishing to PyPI/TestPyPI
+- adding hosted services or app backends
+- adding language ecosystems beyond Python and JavaScript/TypeScript
+- rewriting public release history
+- making canary execution blocking by default
+
+## Known External Caveat
+
+Public GitHub Actions jobs are blocked before startup by an account billing lock. Local gates are the authoritative engineering signal until that external account state is fixed.

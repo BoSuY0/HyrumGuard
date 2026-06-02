@@ -1,57 +1,92 @@
-# HyrumGuard Public Release Specification
+# HyrumGuard Continuous Hardening Specification
 
 ## Goal
 
-Finish HyrumGuard as a stable public release. The concrete release target is a public GitHub repository and non-draft GitHub Release `v1.0.0` containing verified Python wheel and source distribution assets.
+Keep HyrumGuard moving beyond the public `v1.0.0` release by adding concrete user-visible functionality, increasing regression coverage, and tightening architecture in small verified commits.
 
-The release remains a local CLI/package product. PyPI publication is desirable, but it must not be claimed unless a real upload succeeds and is verified.
+The current batch adds:
 
-## Public Release Scope
+1. Risk suppressions for known/accepted Hyrum's Law findings.
+2. A first-run initializer for starter configuration.
+3. Documentation updates that describe the new flows and preserve safety boundaries.
 
-- Public repository: `https://github.com/BoSuY0/HyrumGuard`
-- Public release: `v1.0.0`
-- Release assets:
-  - `hyrumguard-1.0.0.tar.gz`
-  - `hyrumguard-1.0.0-py3-none-any.whl`
-- Package name: `hyrumguard`
-- Product: CLI for downstream discovery, shadow contract mining, PR risk reporting, validation, and changed-only canary planning.
+## Product Baseline
+
+HyrumGuard is a local CLI/package for:
+
+- downstream discovery
+- implicit usage mining
+- shadow contract synthesis
+- PR-time risk analysis
+- changed-only canary planning
+- JSON, Markdown, and SARIF output
+- artifact validation
+
+It supports Python and JavaScript/TypeScript downstream mining for PyPI/npm-style projects. Canary execution remains dry-run by default.
+
+## Current Batch Requirements
+
+### CB-1 Risk Suppressions
+
+Users can define suppressions in `.hyrumguard.yml` for risks they knowingly accept. A suppression must be explicit and auditable.
+
+Required behavior:
+
+- Suppressions are loaded from config.
+- Each suppression can target a risk by stable risk id, subject, or contract type.
+- Suppressed risks remain visible in machine output with suppression metadata instead of disappearing silently.
+- Markdown reports summarize active suppressions.
+- SARIF output marks suppressed findings with SARIF suppression metadata when possible.
+- Validation rejects malformed suppression entries.
+- Expired suppressions are ignored or reported as expired, with tests covering the behavior.
+
+### CB-2 First-Run Initialization
+
+Users can run a CLI command to create a starter `.hyrumguard.yml`.
+
+Required behavior:
+
+- The command writes a useful starter config in the current directory by default.
+- It refuses to overwrite an existing file unless an explicit overwrite flag is provided.
+- It supports writing to a custom path.
+- It is covered by CLI tests.
+
+### CB-3 Documentation And Structure
+
+Docs should explain:
+
+- how suppressions work
+- how to initialize a config
+- what remains unsafe or out of scope
+- where generated outputs belong
 
 ## Non-Goals
 
-- No hosted SaaS.
-- No full GitHub App or GitLab App backend.
-- No languages/ecosystems beyond Python and JavaScript/TypeScript, npm/PyPI.
-- No claim of PyPI upload without real PyPI/TestPyPI credentials or trusted-publisher proof.
-- No claim of hard network sandboxing inside HyrumGuard itself.
-
-## Required Capabilities
-
-1. Public release metadata
-   - Project URLs point to the public repo.
-   - README/docs mention the public release channel.
-   - Changelog has `1.0.0`.
-
-2. Public release automation
-   - GitHub Actions validates tests, lint, type checks, build, smoke, and artifact validation.
-   - Tag-triggered release workflow builds wheel/sdist, runs `twine check`, uploads GitHub Release assets, and documents optional PyPI publishing.
-
-3. Local gates
-   - Pytest, ruff, mypy, build, twine check, CLI help, and fixture flow pass.
-
-4. Published state
-   - Source is committed, pushed, and visible in public repo.
-   - Tag `v1.0.0` is pushed.
-   - Public GitHub Release `v1.0.0` exists with both distribution assets.
+- No hosted service.
+- No app backend.
+- No new ecosystems beyond the existing Python and JavaScript/TypeScript slice.
+- No silent dropping of findings.
+- No weakening of unsafe canary acknowledgement.
+- No PyPI publication unless separately approved and verified.
 
 ## Scorecard
 
-Completion requires:
+For each task:
 
-- every local gate passes
-- `gh repo view BoSuY0/HyrumGuard` proves the repo is public
-- `gh release view v1.0.0 --repo BoSuY0/HyrumGuard` proves the release is public, non-draft, and non-prerelease
-- release assets list includes both built artifacts
+- focused tests prove the new behavior
+- shared gates run when touched code affects CLI, validation, reporting, or analysis
+- docs are updated for user-visible behavior
+- a commit records the completed task
 
-## Fast Feedback Loop
+Batch close requires:
 
-Run `.venv/bin/python -m pytest -q tests/test_public_release_readiness.py tests/test_release_readiness.py` after release metadata/workflow edits.
+- `.venv/bin/python -m pytest -q`
+- `.venv/bin/python -m ruff check .`
+- `.venv/bin/python -m mypy hyrumguard`
+- `rm -rf dist build hyrumguard.egg-info && .venv/bin/python -m build`
+- `.venv/bin/python -m twine check dist/*`
+- CLI help smoke
+
+## Human Control
+
+The user controls the stop point. After this batch is complete, Codex should open the next focused batch instead of calling the goal complete.

@@ -1,44 +1,80 @@
-# HyrumGuard Public Release Plan
+# HyrumGuard Continuous Hardening Plan
 
-**Goal:** Publish HyrumGuard as a stable public GitHub release `v1.0.0`.
+**Goal:** Add real functionality, broad tests, and architecture stabilization in small verified commits.
 
-**Context:** The local stable release candidate exists. Public release still needs public repo, commit, tag, remote push, GitHub Release, and verified release assets.
+**Context:** Public release `v1.0.0` exists. The next work should improve day-two usability and maintainability without expanding the product into hosted services or new ecosystems.
 
-## Public Release Checklist
+**Execution:** Work task-by-task. For production behavior, use TDD. After every completed task, run fresh verification and commit with the Lore Commit Protocol fallback format from `AGENTS.md`.
 
-- [x] Inspect public-release prerequisites.
-- [x] Align goal/spec/docs/control with public-release scope.
-- [x] Add public-release readiness tests.
-- [x] Add tag-triggered release workflow and optional PyPI publishing boundary.
-- [x] Install/use `twine` and run `twine check`.
-- [x] Run full local gates.
-- [x] Commit release source with Lore Commit Protocol.
-- [x] Create public GitHub repo `BoSuY0/HyrumGuard` and set `origin`.
-- [x] Push default branch and tag `v1.0.0`.
-- [x] Create public GitHub Release `v1.0.0` with wheel/sdist assets.
-- [x] Verify public repo/release/assets from GitHub.
-- [x] Update `GOAL.md` evidence and complete the active goal only if public evidence passes.
+## Task 0: Reframe Goal State
 
-## Task 1: Public Release Metadata
+**Goal:** Replace the completed public-release goal state with a continuous hardening contract.
 
-**Files:** `GOAL.md`, `SPEC.md`, `PLAN.md`, `CONTROL.md`, `README.md`, `pyproject.toml`, docs.
+**Files:** `GOAL.md`, `SPEC.md`, `PLAN.md`, `CONTROL.md`, `ATTEMPTS.md`, `NOTES.md`
 
-**Approach:** Replace local-only release framing with public GitHub release framing and actual repository URLs.
+**Approach:** Keep the public release evidence as historical context, then define the current batch and stop rules.
 
-**Verification:** `pytest -q tests/test_public_release_readiness.py tests/test_release_readiness.py`
+**Verification:** `git diff --check`
 
-## Task 2: Automation And Gates
+**Done when:** Durable state names the current batch and the task is committed.
 
-**Files:** `.github/workflows/release.yml`, `pyproject.toml`, tests.
+## Task 1: Risk Suppression Policy
 
-**Approach:** Add release workflow and `twine` dev dependency/checks.
+**Goal:** Let users suppress known risks from config while keeping audit evidence visible.
 
-**Verification:** pytest, build, twine check.
+**Files to inspect:** `hyrumguard/config.py`, `hyrumguard/analysis.py`, `hyrumguard/reporters/json.py`, `hyrumguard/reporters/markdown.py`, `hyrumguard/reporters/sarif.py`, `hyrumguard/validation.py`, `hyrumguard/cli.py`, `tests/*`
 
-## Task 3: Publish
+**Approach:**
 
-**Files:** git history, GitHub repo, GitHub release.
+- Add failing tests for suppression loading, analysis/report output, validation, and CLI integration.
+- Add a typed suppression model or helper module if it reduces duplication.
+- Apply suppressions after risk detection so generated evidence remains auditable.
+- Keep unsuppressed-risk behavior unchanged.
 
-**Approach:** Commit, tag, create public repo if missing, push, create release with assets.
+**Verification:**
 
-**Verification:** `gh repo view`, `gh release view`, `gh release view --json assets`.
+- focused suppression tests
+- `.venv/bin/python -m pytest -q`
+- `.venv/bin/python -m ruff check .`
+- `.venv/bin/python -m mypy hyrumguard`
+
+**Done when:** Suppression behavior is tested, documented, and committed.
+
+## Task 2: First-Run Init Command
+
+**Goal:** Add a safe CLI initializer for starter `.hyrumguard.yml` files.
+
+**Files to inspect:** `hyrumguard/cli.py`, `hyrumguard/config.py`, `README.md`, `docs/reference/configuration.md`, `tests/test_cli.py`
+
+**Approach:**
+
+- Add failing CLI tests for default output, custom path, and overwrite protection.
+- Implement `hyrumguard init` with explicit overwrite semantics.
+- Document the command and starter config shape.
+
+**Verification:**
+
+- focused CLI tests
+- `.venv/bin/python -m pytest -q`
+- `.venv/bin/python -m ruff check .`
+
+**Done when:** Init behavior is tested, documented, and committed.
+
+## Task 3: Batch Close
+
+**Goal:** Prove the hardening batch did not regress the release baseline.
+
+**Files:** codebase and distribution artifacts
+
+**Approach:** Run full local gates and update working memory with the evidence.
+
+**Verification:**
+
+- `.venv/bin/python -m pytest -q`
+- `.venv/bin/python -m ruff check .`
+- `.venv/bin/python -m mypy hyrumguard`
+- `rm -rf dist build hyrumguard.egg-info && .venv/bin/python -m build`
+- `.venv/bin/python -m twine check dist/*`
+- CLI help smoke
+
+**Done when:** Full gate evidence is recorded and the batch close is committed.
