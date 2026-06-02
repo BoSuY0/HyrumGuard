@@ -17,3 +17,4 @@
 - First continuous hardening batch closed locally with release-style gates. Do not call the goal complete; open the next batch because the user asked the loop to continue.
 - Next batch should keep explanation local and artifact-driven: no network fetches, no downstream execution, no report behavior changes unless tests ask for them.
 - `explain` is intentionally separate from `report`: reports summarize the full risk artifact, explanations render targeted evidence for one selected id or subject.
+- Explainability batch closed locally with release-style gates. Do not call the goal complete; choose another focused batch.
