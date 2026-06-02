@@ -63,7 +63,7 @@ Stop condition: keep opening the next small batch after CB-4 unless the user exp
 </scorecard>
 
 <done_when>
-- [ ] CB-0 Durable goal/spec/plan/control state reflects continuous hardening mode and is committed.
+- [x] CB-0 Durable goal/spec/plan/control state reflects continuous hardening mode and is committed.
 - [ ] CB-1 Suppression policy works from config and reduces/report-marks risks without deleting audit evidence.
 - [ ] CB-2 CLI `init` flow writes a starter `.hyrumguard.yml` safely and refuses to overwrite unless explicitly requested.
 - [ ] CB-3 Docs explain suppressions, initialization, and the current architecture boundaries.
@@ -149,10 +149,11 @@ Interim responses should report the current task, commit hash, and verification 
 ### Completed
 
 - 2026-06-02, prior public-release goal completed. evidence: public repo `BoSuY0/HyrumGuard`, tag/release `v1.0.0`, verified wheel/sdist assets, local gates passed, public CI caveat documented.
+- 2026-06-02, CB-0 verified. evidence: commit `ef2f950` reframed `GOAL.md`, `SPEC.md`, `PLAN.md`, `CONTROL.md`, `ATTEMPTS.md`, and `NOTES.md`; `git diff --check` passed.
 
 ### In Progress
 
-- 2026-06-02, CB-0 in progress. Bridge: update durable state from public-release mode to continuous hardening mode, then commit.
+- 2026-06-02, CB-1 in progress. Bridge: add auditable suppression policy through TDD, then commit.
 
 ### Blockers / Open Questions
 
