@@ -25,3 +25,6 @@
 - Suppression RED: focused tests failed on multi-line YAML list mappings, missing config validation, missing analysis `suppressions` argument, canary selecting suppressed risks, and missing CLI `check --config`.
 - Suppression GREEN: focused tests for suppression parsing, validation, analysis, reporters, canary filtering, and CLI config integration passed with `10 passed`.
 - Suppression broader gates: full pytest passed with `32 passed`; `ruff check .` passed; `mypy hyrumguard` passed.
+- Init RED: focused CLI tests failed because `init` was not a registered subcommand and overwrite protection did not exist.
+- Init GREEN: focused CLI tests for help, default config, custom path, overwrite refusal, and explicit overwrite passed with `5 passed`.
+- Init broader gates: full pytest passed with `36 passed`; `ruff check .` passed; `mypy hyrumguard` passed.

@@ -8,7 +8,7 @@ from typing import Any
 
 from hyrumguard.analysis import analyze_risks
 from hyrumguard.canary import plan_canary
-from hyrumguard.config import load_config
+from hyrumguard.config import load_config, starter_config_text
 from hyrumguard.diff import git_diff, parse_unified_diff
 from hyrumguard.discovery import discover_dependents, parse_seed
 from hyrumguard.io import read_json, write_json, write_text
@@ -33,6 +33,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--debug", action="store_true", help="show Python tracebacks for HyrumGuard internal errors")
     subparsers = parser.add_subparsers(dest="command")
+
+    init = subparsers.add_parser("init", help="write a starter HyrumGuard config")
+    init.add_argument("--path", default=".hyrumguard.yml", help="config path to write")
+    init.add_argument("--overwrite", action="store_true", help="replace an existing config file")
+    init.set_defaults(func=cmd_init)
 
     discover = subparsers.add_parser("discover", help="discover or record downstream dependent repositories")
     discover.add_argument("target", help="target package or repository name")
@@ -90,6 +95,15 @@ def build_parser() -> argparse.ArgumentParser:
     validate.set_defaults(func=cmd_validate)
 
     return parser
+
+
+def cmd_init(args: argparse.Namespace) -> int:
+    target = Path(args.path)
+    if target.exists() and not args.overwrite:
+        raise ValidationError(f"config already exists: {target}; pass --overwrite to replace it")
+    write_text(target, starter_config_text())
+    print(f"wrote starter config to {target}")
+    return 0
 
 
 def cmd_discover(args: argparse.Namespace) -> int:

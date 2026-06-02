@@ -31,15 +31,17 @@ flowchart LR
 - `hyrumguard.suppressions`: marks accepted risks without dropping audit evidence.
 - `hyrumguard.canary`: plans or executes changed-only downstream checks.
 - `hyrumguard.reporters`: renders risk output as JSON, Markdown, and SARIF.
+- `hyrumguard.config`: loads config and provides the starter config used by `hyrumguard init`.
 - `hyrumguard.cli`: exposes the product flow.
 
 ## Data Flow
 
-1. Discovery writes `.hyrum/dependents.json`.
-2. Inference writes `.hyrum/shadow-contracts.lock.json`.
-3. Check writes `.hyrum/risks.json`, optionally marking config-suppressed findings.
-4. Report writes Markdown/SARIF/JSON artifacts.
-5. Canary writes `.hyrum/canary.json` from active unsuppressed risks by default.
+1. Optional initialization writes `.hyrumguard.yml`.
+2. Discovery writes `.hyrum/dependents.json`.
+3. Inference writes `.hyrum/shadow-contracts.lock.json`.
+4. Check writes `.hyrum/risks.json`, optionally marking config-suppressed findings.
+5. Report writes Markdown/SARIF/JSON artifacts.
+6. Canary writes `.hyrum/canary.json` from active unsuppressed risks by default.
 
 ## Design Boundaries
 

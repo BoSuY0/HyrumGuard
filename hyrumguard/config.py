@@ -5,6 +5,42 @@ from pathlib import Path
 from typing import Any
 
 
+STARTER_CONFIG = """version: 1
+
+target:
+  ecosystem: pypi
+  package: demo_lib
+
+discovery:
+  top_dependents: 40
+  ecosystems:
+    - manual
+    - pypi
+  seeds:
+    - python-client=tests/fixtures/downstreams/python_client
+
+contracts:
+  confidence_threshold: 0.7
+
+canary:
+  enabled: true
+  affected_only: true
+  max_repositories: 8
+  timeout_seconds: 300
+
+reporting:
+  markdown: true
+  sarif: true
+  json_artifact: true
+
+suppressions: []
+"""
+
+
+def starter_config_text() -> str:
+    return STARTER_CONFIG
+
+
 def load_config(path: str | Path | None) -> dict[str, Any]:
     if path is None:
         return {}
@@ -88,6 +124,10 @@ def _parse_scalar(value: str) -> Any:
         return False
     if value in {"null", "None", "~"}:
         return None
+    if value == "[]":
+        return []
+    if value == "{}":
+        return {}
     if value.startswith(("'", '"')) and value.endswith(("'", '"')):
         return value[1:-1]
     try:

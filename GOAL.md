@@ -65,8 +65,8 @@ Stop condition: keep opening the next small batch after CB-4 unless the user exp
 <done_when>
 - [x] CB-0 Durable goal/spec/plan/control state reflects continuous hardening mode and is committed.
 - [x] CB-1 Suppression policy works from config and reduces/report-marks risks without deleting audit evidence.
-- [ ] CB-2 CLI `init` flow writes a starter `.hyrumguard.yml` safely and refuses to overwrite unless explicitly requested.
-- [ ] CB-3 Docs explain suppressions, initialization, and the current architecture boundaries.
+- [x] CB-2 CLI `init` flow writes a starter `.hyrumguard.yml` safely and refuses to overwrite unless explicitly requested.
+- [x] CB-3 Docs explain suppressions, initialization, and the current architecture boundaries.
 - [ ] CB-4 Batch regression gates pass: pytest, ruff, mypy, build, twine check, and CLI smoke.
 </done_when>
 
@@ -151,10 +151,12 @@ Interim responses should report the current task, commit hash, and verification 
 - 2026-06-02, prior public-release goal completed. evidence: public repo `BoSuY0/HyrumGuard`, tag/release `v1.0.0`, verified wheel/sdist assets, local gates passed, public CI caveat documented.
 - 2026-06-02, CB-0 verified. evidence: commit `ef2f950` reframed `GOAL.md`, `SPEC.md`, `PLAN.md`, `CONTROL.md`, `ATTEMPTS.md`, and `NOTES.md`; `git diff --check` passed.
 - 2026-06-02, CB-1 verified. evidence: suppression RED failed for missing parser/validator/analysis/canary/CLI behavior; GREEN passed with focused `10 passed`, full pytest `32 passed`, ruff clean, mypy clean.
+- 2026-06-02, CB-2 verified. evidence: `hyrumguard init` tests covered help/default config/custom path/overwrite refusal/explicit overwrite; full pytest `36 passed`, ruff clean, mypy clean.
+- 2026-06-02, CB-3 verified. evidence: `README.md`, `docs/reference/configuration.md`, and `docs/reference/architecture.md` document suppressions, init, and safety/architecture boundaries.
 
 ### In Progress
 
-- 2026-06-02, CB-2 in progress. Bridge: add first-run `init` command through TDD, then commit.
+- 2026-06-02, CB-4 in progress. Bridge: run full release-style local gates and commit batch close evidence.
 
 ### Blockers / Open Questions
 

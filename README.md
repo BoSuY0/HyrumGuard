@@ -25,6 +25,7 @@ python3 -m venv .venv
 Run the report flow:
 
 ```bash
+python -m hyrumguard.cli init
 python -m hyrumguard.cli discover demo_lib --config .hyrumguard.yml --out .hyrum/dependents.json
 python -m hyrumguard.cli infer --from .hyrum/dependents.json --out .hyrum/shadow-contracts.lock.json
 python -m hyrumguard.cli check --contracts .hyrum/shadow-contracts.lock.json --diff-file tests/fixtures/sample.diff --config .hyrumguard.yml --out .hyrum/risks.json
@@ -37,6 +38,7 @@ python -m hyrumguard.cli canary --risks .hyrum/risks.json --dependents .hyrum/de
 The installed script exposes the same commands:
 
 ```bash
+hyrumguard init
 hyrumguard discover demo_lib --config .hyrumguard.yml
 hyrumguard infer --from .hyrum/dependents.json
 hyrumguard check --base origin/main --head HEAD
@@ -45,6 +47,7 @@ hyrumguard report --format sarif --out hyrumguard.sarif
 
 ## Command Model
 
+- `init`: writes a starter `.hyrumguard.yml` and refuses to overwrite without `--overwrite`.
 - `discover`: collects manual seeds and optional ecosyste.ms dependent package data.
 - `infer`: scans dependent repositories and writes `.hyrum/shadow-contracts.lock.json`.
 - `check`: maps a git diff or explicit diff file to affected shadow contracts, with optional config-driven suppressions.

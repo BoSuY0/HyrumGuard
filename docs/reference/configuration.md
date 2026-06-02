@@ -2,6 +2,19 @@
 
 HyrumGuard reads a small YAML or JSON config. The bundled parser supports the simple YAML subset used here.
 
+Create a starter config:
+
+```bash
+hyrumguard init
+```
+
+Use `--path` for a custom location and `--overwrite` only when replacing an existing config intentionally:
+
+```bash
+hyrumguard init --path config/hyrumguard.yml
+hyrumguard init --overwrite
+```
+
 ```yaml
 version: 1
 
@@ -36,12 +49,7 @@ reporting:
   sarif: true
   json_artifact: true
 
-suppressions:
-  - id: accepted-error-text
-    subject: missing token
-    type: error_regex
-    reason: Accepted legacy client assertion while replacement ships.
-    expires: 2099-12-31
+suppressions: []
 ```
 
 ## Manual Seeds

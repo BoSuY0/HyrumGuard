@@ -3,6 +3,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+from hyrumguard.config import load_config
+from hyrumguard.validation import validate_config
+
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -26,10 +29,56 @@ def test_cli_help_commands_exit_zero():
         ("canary", "--help"),
         ("report", "--help"),
         ("validate", "--help"),
+        ("init", "--help"),
     ]:
         result = run_cli(*args)
         assert result.returncode == 0, result.stderr
         assert "hyrumguard" in result.stdout.lower()
+
+
+def test_cli_init_writes_default_config(tmp_path):
+    result = run_cli("init", cwd=tmp_path)
+    config = tmp_path / ".hyrumguard.yml"
+
+    assert result.returncode == 0, result.stderr
+    assert config.exists()
+    text = config.read_text()
+    assert "target:" in text
+    assert "suppressions:" in text
+    validate_config(load_config(config))
+    assert "wrote starter config" in result.stdout
+
+
+def test_cli_init_supports_custom_path(tmp_path):
+    result = run_cli("init", "--path", "config/hyrumguard.yml", cwd=tmp_path)
+    config = tmp_path / "config" / "hyrumguard.yml"
+
+    assert result.returncode == 0, result.stderr
+    assert config.exists()
+    assert "config/hyrumguard.yml" in result.stdout
+
+
+def test_cli_init_refuses_to_overwrite_without_flag(tmp_path):
+    config = tmp_path / ".hyrumguard.yml"
+    config.write_text("existing: true\n")
+
+    result = run_cli("init", cwd=tmp_path)
+
+    assert result.returncode == 2
+    assert "--overwrite" in result.stderr
+    assert "Traceback" not in result.stderr
+    assert config.read_text() == "existing: true\n"
+
+
+def test_cli_init_overwrites_with_explicit_flag(tmp_path):
+    config = tmp_path / ".hyrumguard.yml"
+    config.write_text("existing: true\n")
+
+    result = run_cli("init", "--overwrite", cwd=tmp_path)
+
+    assert result.returncode == 0, result.stderr
+    assert "existing: true" not in config.read_text()
+    assert "version: 1" in config.read_text()
 
 
 def test_cli_infer_check_report_flow(tmp_path):

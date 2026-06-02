@@ -13,3 +13,4 @@
 - GitHub Actions is enabled for the repo, but job startup is blocked by an account billing lock; public CI will remain red until that external account issue is resolved.
 - Current hardening loop should keep the public release as historical baseline and open small verified batches. The user explicitly controls when the loop ends.
 - Suppressed risks stay in the risk artifact for auditability. Active risk counts use `summary.risk_count`; full matched counts use `summary.total_risk_count`.
+- Starter config lives in `hyrumguard.config.STARTER_CONFIG` so CLI initialization and tests share one canonical example.
