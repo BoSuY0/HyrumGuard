@@ -44,6 +44,8 @@ def plan_canary(
 def _affected_dependents(risks: dict[str, Any]) -> dict[str, set[str]]:
     affected: dict[str, set[str]] = {}
     for risk in risks.get("risks", []):
+        if risk.get("suppressed"):
+            continue
         for dependent in risk.get("dependents", []):
             affected.setdefault(dependent, set()).add(risk.get("subject", "unknown"))
     return affected

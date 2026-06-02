@@ -35,6 +35,13 @@ reporting:
   markdown: true
   sarif: true
   json_artifact: true
+
+suppressions:
+  - id: accepted-error-text
+    subject: missing token
+    type: error_regex
+    reason: Accepted legacy client assertion while replacement ships.
+    expires: 2099-12-31
 ```
 
 ## Manual Seeds
@@ -51,6 +58,28 @@ The CLI also accepts manual seeds:
 
 ```bash
 hyrumguard discover demo_lib --seed python-client=tests/fixtures/downstreams/python_client
+```
+
+## Suppressions
+
+Suppression entries let maintainers accept known risks without deleting the audit trail. A suppression requires:
+
+- `id`: stable local identifier for review and SARIF metadata
+- `reason`: why the finding is accepted
+- at least one target matcher: `risk_id`, `subject`, or `type`
+
+Optional `expires` must be an ISO date such as `2026-12-31`. Expired suppressions are reported in `summary.expired_suppression_count` and do not suppress matching risks.
+
+When suppressions apply, the risk remains in `.hyrum/risks.json` with `suppressed: true` and a `suppression` object. `summary.risk_count` counts active unsuppressed risks, while `summary.total_risk_count` and `summary.suppressed_count` preserve the full audit count.
+
+Run `check` with config to apply suppressions:
+
+```bash
+hyrumguard check \
+  --contracts .hyrum/shadow-contracts.lock.json \
+  --base origin/main \
+  --head HEAD \
+  --config .hyrumguard.yml
 ```
 
 ## Runtime Artifacts

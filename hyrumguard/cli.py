@@ -56,6 +56,7 @@ def build_parser() -> argparse.ArgumentParser:
     check.add_argument("--base")
     check.add_argument("--head")
     check.add_argument("--diff-file")
+    check.add_argument("--config")
     check.add_argument("--out", default=".hyrum/risks.json")
     check.set_defaults(func=cmd_check)
 
@@ -133,11 +134,14 @@ def cmd_infer(args: argparse.Namespace) -> int:
 
 def cmd_check(args: argparse.Namespace) -> int:
     lockfile = read_json(args.contracts)
+    config = load_config(args.config)
+    if config:
+        validate_config(config)
     if args.diff_file:
         diff = parse_unified_diff(Path(args.diff_file).read_text())
     else:
         diff = git_diff(args.base, args.head)
-    risks = analyze_risks(lockfile, diff)
+    risks = analyze_risks(lockfile, diff, suppressions=config.get("suppressions", []))
     write_json(args.out, risks)
     print(f"wrote {risks['summary']['risk_count']} risks to {args.out}")
     return 0

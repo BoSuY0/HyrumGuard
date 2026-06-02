@@ -27,7 +27,8 @@ def parse_simple_yaml(text: str) -> dict[str, Any]:
     root: dict[str, Any] = {}
     stack: list[tuple[int, Any]] = [(-1, root)]
 
-    for raw_line in text.splitlines():
+    lines = text.splitlines()
+    for index, raw_line in enumerate(lines):
         if not raw_line.strip() or raw_line.lstrip().startswith("#"):
             continue
         indent = len(raw_line) - len(raw_line.lstrip(" "))
@@ -41,7 +42,12 @@ def parse_simple_yaml(text: str) -> dict[str, Any]:
             item_text = line[2:].strip()
             if not isinstance(parent, list):
                 raise ValueError(f"List item has no list parent: {raw_line}")
-            parent.append(_parse_inline_mapping(item_text) if ":" in item_text else _parse_scalar(item_text))
+            if ":" not in item_text:
+                parent.append(_parse_scalar(item_text))
+                continue
+            item = _parse_inline_mapping(item_text)
+            parent.append(item)
+            stack.append((indent, item))
             continue
 
         key, sep, value = line.partition(":")
@@ -54,21 +60,15 @@ def parse_simple_yaml(text: str) -> dict[str, Any]:
             continue
 
         container: dict[str, Any] | list[Any]
-        container = [] if _next_non_empty_starts_with_dash(text, raw_line) else {}
+        container = [] if _next_non_empty_starts_with_dash(lines, index, indent) else {}
         parent[key] = container
         stack.append((indent, container))
 
     return root
 
 
-def _next_non_empty_starts_with_dash(text: str, current_line: str) -> bool:
-    lines = text.splitlines()
-    try:
-        start = lines.index(current_line) + 1
-    except ValueError:
-        return False
-    current_indent = len(current_line) - len(current_line.lstrip(" "))
-    for line in lines[start:]:
+def _next_non_empty_starts_with_dash(lines: list[str], current_index: int, current_indent: int) -> bool:
+    for line in lines[current_index + 1 :]:
         if not line.strip() or line.lstrip().startswith("#"):
             continue
         indent = len(line) - len(line.lstrip(" "))

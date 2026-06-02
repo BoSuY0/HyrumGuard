@@ -78,6 +78,61 @@ def test_cli_infer_check_report_flow(tmp_path):
     assert json.loads(sarif.read_text())["version"] == "2.1.0"
 
 
+def test_cli_check_applies_configured_suppressions(tmp_path):
+    dependents = tmp_path / "dependents.json"
+    lockfile = tmp_path / "shadow-contracts.lock.json"
+    risks = tmp_path / "risks.json"
+    config = tmp_path / ".hyrumguard.yml"
+
+    dependents.write_text(
+        json.dumps(
+            {
+                "dependents": [
+                    {
+                        "name": "python-client",
+                        "path": str(FIXTURES / "downstreams" / "python_client"),
+                        "target_package": "demo_lib",
+                    }
+                ]
+            }
+        )
+    )
+    config.write_text(
+        """
+version: 1
+suppressions:
+  - id: accepted-error-text
+    subject: missing token
+    type: error_regex
+    reason: Accepted legacy client assertion while replacement ships.
+"""
+    )
+
+    infer = run_cli("infer", "--from", str(dependents), "--out", str(lockfile))
+    assert infer.returncode == 0, infer.stderr
+
+    check = run_cli(
+        "check",
+        "--contracts",
+        str(lockfile),
+        "--diff-file",
+        str(FIXTURES / "sample.diff"),
+        "--config",
+        str(config),
+        "--out",
+        str(risks),
+    )
+
+    payload = json.loads(risks.read_text())
+    suppressed = next(risk for risk in payload["risks"] if risk["subject"] == "missing token")
+
+    assert check.returncode == 0, check.stderr
+    assert payload["summary"]["suppressed_count"] == 1
+    assert payload["summary"]["risk_count"] == payload["summary"]["total_risk_count"] - 1
+    assert suppressed["suppressed"] is True
+    assert suppressed["suppression"]["id"] == "accepted-error-text"
+
+
 def test_cli_canary_dry_run(tmp_path):
     risks = tmp_path / "risks.json"
     dependents = tmp_path / "dependents.json"

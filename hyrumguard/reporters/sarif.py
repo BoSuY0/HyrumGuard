@@ -15,18 +15,28 @@ def render_sarif(risks: dict[str, Any]) -> str:
             "shortDescription": {"text": f"HyrumGuard {risk['type']} risk"},
         }
         location = _location_for(risk)
-        results.append(
-            {
-                "ruleId": rule_id,
-                "level": _level(risk.get("severity", "low")),
-                "message": {"text": f"{risk['subject']}: {risk['reason']}"},
-                "locations": [location],
-                "properties": {
-                    "dependents": risk.get("dependents", []),
-                    "target_package": risk.get("target_package"),
-                },
-            }
-        )
+        result: dict[str, Any] = {
+            "ruleId": rule_id,
+            "level": "none" if risk.get("suppressed") else _level(risk.get("severity", "low")),
+            "message": {"text": f"{risk['subject']}: {risk['reason']}"},
+            "locations": [location],
+            "properties": {
+                "dependents": risk.get("dependents", []),
+                "target_package": risk.get("target_package"),
+                "suppressed": bool(risk.get("suppressed")),
+            },
+        }
+        if risk.get("suppressed"):
+            suppression = risk.get("suppression", {})
+            result["suppressions"] = [
+                {
+                    "kind": "external",
+                    "status": "accepted",
+                    "justification": suppression.get("reason", ""),
+                }
+            ]
+            result["properties"]["suppression_id"] = suppression.get("id")
+        results.append(result)
 
     payload = {
         "$schema": "https://json.schemastore.org/sarif-2.1.0.json",

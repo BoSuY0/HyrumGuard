@@ -3,12 +3,17 @@ from __future__ import annotations
 from typing import Any
 
 from hyrumguard.diff import DiffFacts
+from hyrumguard.suppressions import apply_suppressions
 
 
 SEVERITY_ORDER = {"none": 0, "low": 1, "medium": 2, "high": 3}
 
 
-def analyze_risks(lockfile: dict[str, Any], diff: DiffFacts | dict[str, Any]) -> dict[str, Any]:
+def analyze_risks(
+    lockfile: dict[str, Any],
+    diff: DiffFacts | dict[str, Any],
+    suppressions: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
     facts = diff if isinstance(diff, DiffFacts) else _facts_from_dict(diff)
     risks: list[dict[str, Any]] = []
     for contract in lockfile.get("contracts", []):
@@ -32,7 +37,7 @@ def analyze_risks(lockfile: dict[str, Any], diff: DiffFacts | dict[str, Any]) ->
         )
 
     risks.sort(key=lambda item: (-SEVERITY_ORDER[item["severity"]], item["subject"]))
-    return {
+    payload = {
         "schema_version": 1,
         "summary": {
             "risk_count": len(risks),
@@ -42,6 +47,7 @@ def analyze_risks(lockfile: dict[str, Any], diff: DiffFacts | dict[str, Any]) ->
         },
         "risks": risks,
     }
+    return apply_suppressions(payload, suppressions)
 
 
 def _facts_from_dict(payload: dict[str, Any]) -> DiffFacts:

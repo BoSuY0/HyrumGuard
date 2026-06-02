@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -32,6 +33,12 @@ def validate_config(config: dict[str, Any]) -> None:
             raise ValidationError("invalid config.discovery.seeds: must be a list")
         if "ecosystems" in discovery and not isinstance(discovery["ecosystems"], list | str):
             raise ValidationError("invalid config.discovery.ecosystems: must be a list or string")
+    if "suppressions" in config:
+        suppressions = config["suppressions"]
+        if not isinstance(suppressions, list):
+            raise ValidationError("invalid config.suppressions: must be a list")
+        for index, suppression in enumerate(suppressions):
+            _validate_suppression(suppression, f"config.suppressions[{index}]")
 
 
 def validate_dependents(payload: dict[str, Any]) -> None:
@@ -87,6 +94,12 @@ def validate_risks(payload: dict[str, Any]) -> None:
         missing = sorted(required - set(risk))
         if missing:
             raise ValidationError(f"invalid risks[{index}]: missing {', '.join(missing)}")
+        if "suppressed" in risk and not isinstance(risk["suppressed"], bool):
+            raise ValidationError(f"invalid risks[{index}].suppressed: must be a boolean")
+        if risk.get("suppressed"):
+            suppression = _require_object(risk, "suppression", f"risks[{index}]")
+            _require_string(suppression, "id", f"risks[{index}].suppression")
+            _require_string(suppression, "reason", f"risks[{index}].suppression")
 
 
 def validate_sarif(payload: dict[str, Any]) -> None:
@@ -123,3 +136,19 @@ def _require_string(payload: dict[str, Any], key: str, label: str) -> str:
 def _optional_string(payload: dict[str, Any], key: str, label: str) -> None:
     if key in payload and not isinstance(payload[key], str):
         raise ValidationError(f"invalid {label}.{key}: must be a string")
+
+
+def _validate_suppression(value: Any, label: str) -> None:
+    if not isinstance(value, dict):
+        raise ValidationError(f"invalid {label}: must be an object")
+    _require_string(value, "id", label)
+    _require_string(value, "reason", label)
+    for key in ("risk_id", "subject", "type", "expires"):
+        _optional_string(value, key, label)
+    if not any(value.get(key) for key in ("risk_id", "subject", "type")):
+        raise ValidationError(f"invalid {label}: must set at least one of risk_id, subject, or type")
+    if value.get("expires"):
+        try:
+            date.fromisoformat(value["expires"])
+        except ValueError as exc:
+            raise ValidationError(f"invalid {label}.expires: must be an ISO date like 2026-12-31") from exc

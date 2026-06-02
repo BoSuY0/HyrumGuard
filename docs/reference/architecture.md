@@ -13,6 +13,7 @@ flowchart LR
     F[PR diff] --> G[Change analyzer]
     E --> G
     G --> H[Risk clusters]
+    K[Suppression policy] --> H
     H --> I[Canary planner]
     H --> J[Reporters]
     J --> J1[JSON]
@@ -27,6 +28,7 @@ flowchart LR
 - `hyrumguard.synthesis`: groups contract atoms into `shadow-contracts.lock.json`.
 - `hyrumguard.diff`: parses git or unified diff data into changed subjects.
 - `hyrumguard.analysis`: matches changed subjects to shadow contracts.
+- `hyrumguard.suppressions`: marks accepted risks without dropping audit evidence.
 - `hyrumguard.canary`: plans or executes changed-only downstream checks.
 - `hyrumguard.reporters`: renders risk output as JSON, Markdown, and SARIF.
 - `hyrumguard.cli`: exposes the product flow.
@@ -35,9 +37,9 @@ flowchart LR
 
 1. Discovery writes `.hyrum/dependents.json`.
 2. Inference writes `.hyrum/shadow-contracts.lock.json`.
-3. Check writes `.hyrum/risks.json`.
+3. Check writes `.hyrum/risks.json`, optionally marking config-suppressed findings.
 4. Report writes Markdown/SARIF/JSON artifacts.
-5. Canary writes `.hyrum/canary.json`.
+5. Canary writes `.hyrum/canary.json` from active unsuppressed risks by default.
 
 ## Design Boundaries
 

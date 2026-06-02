@@ -9,6 +9,7 @@ def render_markdown(risks: dict[str, Any]) -> str:
         "# HyrumGuard implicit compatibility report",
         "",
         f"- Risks: {summary.get('risk_count', 0)}",
+        f"- Suppressed: {summary.get('suppressed_count', 0)}",
         f"- Highest severity: {summary.get('highest_severity', 'none')}",
         "",
     ]
@@ -16,11 +17,12 @@ def render_markdown(risks: dict[str, Any]) -> str:
         lines.append("No shadow-contract risks were matched against this diff.")
         return "\n".join(lines) + "\n"
 
-    lines.extend(["| Severity | Type | Subject | Dependents | Reason |", "|---|---|---|---|---|"])
+    lines.extend(["| Severity | Status | Type | Subject | Dependents | Reason |", "|---|---|---|---|---|---|"])
     for risk in risks["risks"]:
         dependents = ", ".join(risk.get("dependents", [])) or "-"
+        status = _status(risk)
         lines.append(
-            f"| {risk['severity']} | {risk['type']} | `{risk['subject']}` | {dependents} | {risk['reason']} |"
+            f"| {risk['severity']} | {status} | {risk['type']} | `{risk['subject']}` | {dependents} | {risk['reason']} |"
         )
     lines.append("")
     lines.append("## Evidence")
@@ -32,3 +34,10 @@ def render_markdown(risks: dict[str, Any]) -> str:
                 f"{evidence.get('snippet')}"
             )
     return "\n".join(lines) + "\n"
+
+
+def _status(risk: dict[str, Any]) -> str:
+    if not risk.get("suppressed"):
+        return "active"
+    suppression = risk.get("suppression", {})
+    return f"suppressed: {suppression.get('id', 'unknown')}"

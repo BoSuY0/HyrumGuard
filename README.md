@@ -27,7 +27,7 @@ Run the report flow:
 ```bash
 python -m hyrumguard.cli discover demo_lib --config .hyrumguard.yml --out .hyrum/dependents.json
 python -m hyrumguard.cli infer --from .hyrum/dependents.json --out .hyrum/shadow-contracts.lock.json
-python -m hyrumguard.cli check --contracts .hyrum/shadow-contracts.lock.json --diff-file tests/fixtures/sample.diff --out .hyrum/risks.json
+python -m hyrumguard.cli check --contracts .hyrum/shadow-contracts.lock.json --diff-file tests/fixtures/sample.diff --config .hyrumguard.yml --out .hyrum/risks.json
 python -m hyrumguard.cli report --risks .hyrum/risks.json --format markdown --out .hyrum/report.md
 python -m hyrumguard.cli report --risks .hyrum/risks.json --format sarif --out hyrumguard.sarif
 python -m hyrumguard.cli validate --dependents .hyrum/dependents.json --contracts .hyrum/shadow-contracts.lock.json --risks .hyrum/risks.json --sarif hyrumguard.sarif
@@ -47,7 +47,7 @@ hyrumguard report --format sarif --out hyrumguard.sarif
 
 - `discover`: collects manual seeds and optional ecosyste.ms dependent package data.
 - `infer`: scans dependent repositories and writes `.hyrum/shadow-contracts.lock.json`.
-- `check`: maps a git diff or explicit diff file to affected shadow contracts.
+- `check`: maps a git diff or explicit diff file to affected shadow contracts, with optional config-driven suppressions.
 - `report`: renders the risk model as JSON, Markdown, or SARIF.
 - `canary`: selects affected downstreams and defaults to a dry-run execution plan.
 - `validate`: validates config, dependents, lockfile, risk JSON, and SARIF artifacts.
@@ -67,6 +67,19 @@ Run these before cutting a local release:
 ## Safety
 
 HyrumGuard does not run third-party downstream tests by default. Canary execution requires both `--execute` and `--allow-unsafe-execution`, copies each dependent into a temporary directory, and enforces a timeout. HyrumGuard does not claim hard network isolation; use an external sandbox for untrusted code.
+
+## Suppressions
+
+Use suppressions for known and accepted findings. Suppressed risks stay in JSON, Markdown, and SARIF output with suppression metadata, while `summary.risk_count` counts only active unsuppressed risks.
+
+```yaml
+suppressions:
+  - id: accepted-error-text
+    subject: missing token
+    type: error_regex
+    reason: Accepted legacy client assertion while replacement ships.
+    expires: 2099-12-31
+```
 
 ## Documentation
 
