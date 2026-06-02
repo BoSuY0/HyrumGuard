@@ -11,17 +11,17 @@
 
 ## Current Batch
 
-- CB-0: durable goal/spec/plan/control state
-- CB-1: risk suppression policy
-- CB-2: first-run init command
-- CB-3: docs and architecture notes
-- CB-4: full local regression gates
+- EB-0: durable explainability batch state
+- EB-1: targeted `explain` command
+- EB-2: docs and architecture notes for explanation output
+- EB-3: full local regression gates
 
 ## Safety Boundaries
 
 - Canary execution default: dry-run
 - Real downstream execution: explicit `--execute --allow-unsafe-execution` only
 - Suppressions must remain auditable and must not silently delete findings
+- `explain` reads existing local artifacts only; it must not fetch or execute downstream code
 - Generated runtime outputs stay out of git
 
 ## Pivot Gates

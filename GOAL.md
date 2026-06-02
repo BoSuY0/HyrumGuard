@@ -1,5 +1,5 @@
 <goal>
-Continuously harden HyrumGuard with user-visible functionality, broad regression tests, and cleaner architecture until the user explicitly ends the loop. The current batch focuses on policy-based risk suppression, a first-run project initializer, and regression coverage that keeps release gates stable.
+Continuously harden HyrumGuard with user-visible functionality, broad regression tests, and cleaner architecture until the user explicitly ends the loop. The current batch focuses on targeted risk explainability for generated risk artifacts.
 </goal>
 
 <context>
@@ -16,7 +16,7 @@ Current product baseline:
 - Public repo: `https://github.com/BoSuY0/HyrumGuard`
 - Public release: `v1.0.0`
 - Package version: `1.0.0`
-- Existing CLI commands: `discover`, `infer`, `check`, `canary`, `report`, `validate`
+- Existing CLI commands: `init`, `discover`, `infer`, `check`, `canary`, `report`, `validate`
 - Existing local gates: pytest, ruff, mypy, build, twine check, CLI help smoke, fixture smoke flow
 - Public GitHub Actions are blocked by an external billing lock before jobs start; local gates remain the trusted feedback loop until the account state is fixed.
 - No Graphify artifacts or callable Graphify MCP tools are currently available in this repo; normal repo inspection is the fallback.
@@ -53,21 +53,19 @@ Passing threshold for each task:
 - A Lore-style commit exists after the task.
 
 Current batch acceptance:
-- CB-0 Goal-loop state is updated from completed public release mode to continuous hardening mode.
-- CB-1 Risk suppression policy is implemented and tested across config loading, analysis, reporting, validation, and CLI behavior.
-- CB-2 First-run initialization is implemented and tested so users can generate a starter config safely.
-- CB-3 Architecture/structure docs are updated to describe the new policy and initialization flow.
-- CB-4 Full local gates pass after the batch.
+- EB-0 Goal-loop state names the explainability batch and is committed.
+- EB-1 `hyrumguard explain` can select risks by id or subject and render Markdown/JSON with evidence and suppression state.
+- EB-2 Docs describe the explanation workflow and architecture boundaries.
+- EB-3 Full local gates pass after the batch.
 
-Stop condition: keep opening the next small batch after CB-4 unless the user explicitly tells Codex to stop or finish.
+Stop condition: keep opening the next small batch after EB-3 unless the user explicitly tells Codex to stop or finish.
 </scorecard>
 
 <done_when>
-- [x] CB-0 Durable goal/spec/plan/control state reflects continuous hardening mode and is committed.
-- [x] CB-1 Suppression policy works from config and reduces/report-marks risks without deleting audit evidence.
-- [x] CB-2 CLI `init` flow writes a starter `.hyrumguard.yml` safely and refuses to overwrite unless explicitly requested.
-- [x] CB-3 Docs explain suppressions, initialization, and the current architecture boundaries.
-- [x] CB-4 Batch regression gates pass: pytest, ruff, mypy, build, twine check, and CLI smoke.
+- [ ] EB-0 Durable goal/spec/plan/control state reflects explainability batch scope and is committed.
+- [ ] EB-1 CLI `explain` renders targeted risk evidence by id or subject in Markdown and JSON.
+- [ ] EB-2 Docs explain targeted risk explanation and current architecture boundaries.
+- [ ] EB-3 Batch regression gates pass: pytest, ruff, mypy, build, twine check, and CLI smoke.
 </done_when>
 
 <feedback_loop>
@@ -157,7 +155,7 @@ Interim responses should report the current task, commit hash, and verification 
 
 ### In Progress
 
-- 2026-06-02, next batch opening in progress. Bridge: define the next measurable hardening batch, then continue with TDD.
+- 2026-06-02, EB-0 in progress. Bridge: define explainability batch state, commit it, then start RED tests for `hyrumguard explain`.
 
 ### Blockers / Open Questions
 
@@ -167,3 +165,4 @@ Interim responses should report the current task, commit hash, and verification 
 ### Iteration Log
 
 - 2026-06-02, Started continuous hardening loop from a clean `main...origin/main` state after public release evidence commit `26799cd`.
+- 2026-06-02, First continuous hardening batch closed at commit `5b3fd2f`; next batch selected for targeted risk explainability.

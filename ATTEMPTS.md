@@ -29,3 +29,4 @@
 - Init GREEN: focused CLI tests for help, default config, custom path, overwrite refusal, and explicit overwrite passed with `5 passed`.
 - Init broader gates: full pytest passed with `36 passed`; `ruff check .` passed; `mypy hyrumguard` passed.
 - Batch close gates: build succeeded, `twine check dist/*` passed, CLI help smoke returned `all-help-ok 8`, and fixture flow with generated starter config wrote 5 active risks, 0 suppressions, and 1 canary selection.
+- Explainability batch kickoff: selected targeted risk explanation as the next user-visible workflow after suppression/init hardening.
