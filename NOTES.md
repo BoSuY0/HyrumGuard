@@ -9,3 +9,4 @@
 - Canary execution now requires both `--execute` and `--allow-unsafe-execution`; timeout is reported as a canary result instead of escaping as an exception.
 - Public release scope is GitHub-public source plus GitHub Release `v1.0.0` with wheel/sdist assets.
 - PyPI publication is not claimed because no PyPI/TestPyPI credentials or trusted-publisher proof are present.
+- The first tag-triggered release workflow failed before steps/logs were available; manual `gh release create` was used to complete the public release with the same verified local assets.

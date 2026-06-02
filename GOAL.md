@@ -70,12 +70,12 @@ Stop condition: call `update_goal complete` only when the public release evidenc
 - [x] PR-1.3 Release automation exists for tag-triggered GitHub release asset upload and documented optional PyPI publication.
 - [x] PR-2.1 Public-release readiness tests cover metadata URLs, release docs, release workflow, twine check prerequisites, and existing stable product gates.
 - [x] PR-2.2 Final local gates pass: pytest, ruff, mypy, build, twine check, CLI help, fixture flow.
-- [ ] PR-3.1 Initial release commit exists with Lore Commit Protocol message.
-- [ ] PR-3.2 Public GitHub repository `BoSuY0/HyrumGuard` exists, is public, and local `origin` points to it.
-- [ ] PR-3.3 Default branch is pushed to the public GitHub repository.
-- [ ] PR-3.4 Tag `v1.0.0` exists locally and remotely at the release commit.
-- [ ] PR-3.5 Public GitHub Release `v1.0.0` exists, is not draft, is not prerelease, and includes `hyrumguard-1.0.0.tar.gz` and `hyrumguard-1.0.0-py3-none-any.whl`.
-- [ ] PR-4.1 Completion audit verifies public URLs and release assets from GitHub, not only local files.
+- [x] PR-3.1 Initial release commit exists with Lore Commit Protocol message.
+- [x] PR-3.2 Public GitHub repository `BoSuY0/HyrumGuard` exists, is public, and local `origin` points to it.
+- [x] PR-3.3 Default branch is pushed to the public GitHub repository.
+- [x] PR-3.4 Tag `v1.0.0` exists locally and remotely at the release commit.
+- [x] PR-3.5 Public GitHub Release `v1.0.0` exists, is not draft, is not prerelease, and includes `hyrumguard-1.0.0.tar.gz` and `hyrumguard-1.0.0-py3-none-any.whl`.
+- [x] PR-4.1 Completion audit verifies public URLs and release assets from GitHub, not only local files.
 </done_when>
 
 <feedback_loop>
@@ -152,10 +152,16 @@ Final response should include public repository URL, public release URL, release
 - 2026-06-02, PR-1.3 verified. evidence: `.github/workflows/release.yml` builds, runs `twine check`, uploads GitHub Release assets, and keeps PyPI job opt-in.
 - 2026-06-02, PR-2.1 verified. evidence: `tests/test_public_release_readiness.py` and `tests/test_release_readiness.py`; focused suite -> `11 passed`.
 - 2026-06-02, PR-2.2 verified. evidence: pytest -> `22 passed`; ruff/mypy -> clean; build+twine -> PASSED; CLI help -> `all-help-ok`; fixture flow exited 0.
+- 2026-06-02, PR-3.1 verified. evidence: root commit `3d3e63e` with Lore Commit Protocol fallback message.
+- 2026-06-02, PR-3.2 verified. evidence: `gh repo view BoSuY0/HyrumGuard` -> `visibility: PUBLIC`, URL `https://github.com/BoSuY0/HyrumGuard`; `origin` points to `https://github.com/BoSuY0/HyrumGuard.git`.
+- 2026-06-02, PR-3.3 verified. evidence: `git ls-remote --heads origin` shows `refs/heads/main` at `3d3e63e8896a4c519d0cc8f2a84f7aca601a85fd`.
+- 2026-06-02, PR-3.4 verified. evidence: `git ls-remote --tags origin` shows `refs/tags/v1.0.0` and peeled commit `3d3e63e8896a4c519d0cc8f2a84f7aca601a85fd`.
+- 2026-06-02, PR-3.5 verified. evidence: `gh release view v1.0.0 --repo BoSuY0/HyrumGuard` -> non-draft, non-prerelease, assets `hyrumguard-1.0.0.tar.gz` and `hyrumguard-1.0.0-py3-none-any.whl`.
+- 2026-06-02, PR-4.1 verified. evidence: GitHub API verified public repo URL `https://github.com/BoSuY0/HyrumGuard` and release URL `https://github.com/BoSuY0/HyrumGuard/releases/tag/v1.0.0` with uploaded assets.
 
 ### In Progress
 
-- 2026-06-02, Bridge: current work feeds PR-3.1 through PR-3.5; output enters public release state when source, tag, and GitHub Release are visible at `BoSuY0/HyrumGuard`.
+_(none)_
 
 ### Blockers / Open Questions
 
@@ -165,3 +171,4 @@ Final response should include public repository URL, public release URL, release
 
 - 2026-06-02 18:00, Inspected public-release prerequisites: GitHub auth exists, repo name appears available, no remote/commits/tags exist, PyPI name appears unused, twine missing. next: add public-release metadata/docs/workflow/tests.
 - 2026-06-02 18:10, Added public-release docs/tests/workflow, updated URLs to `BoSuY0/HyrumGuard`, installed twine, and passed local public-release gates. next: commit, push, tag, and create GitHub Release.
+- 2026-06-02 18:20, Created public repo, pushed `main`, pushed tag `v1.0.0`, created public GitHub Release manually after release workflow startup failure, and verified both release assets. next: push evidence commit and final audit.

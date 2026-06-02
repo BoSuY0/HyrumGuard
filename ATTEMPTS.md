@@ -17,3 +17,6 @@
 - Public release prerequisite audit: GitHub CLI is authenticated as `BoSuY0`; `BoSuY0/HyrumGuard` did not exist; repo had no commits/remotes/tags; `pip index versions hyrumguard` found no package; no PyPI/TWINE credentials were present.
 - Public release RED: focused tests failed until project URLs, docs, workflow, and `twine` dependency were added.
 - Public release GREEN: focused public-release tests passed with `11 passed`; full pytest passed with `22 passed`; ruff/mypy/build/twine/CLI help/fixture flow passed.
+- Public publish: `gh repo create BoSuY0/HyrumGuard --public --source=. --remote=origin --push` succeeded and pushed `main`.
+- Public publish: tag `v1.0.0` was pushed. The tag-triggered release workflow failed before steps/logs were available, so release assets were published manually with `gh release create v1.0.0 ... --verify-tag`.
+- Public publish verification: GitHub API reported repo `BoSuY0/HyrumGuard` as `PUBLIC`; release `v1.0.0` is non-draft/non-prerelease and has wheel/sdist assets uploaded.

@@ -7,17 +7,17 @@
 ## Public Release Checklist
 
 - [x] Inspect public-release prerequisites.
-- [ ] Align goal/spec/docs/control with public-release scope.
-- [ ] Add public-release readiness tests.
-- [ ] Add tag-triggered release workflow and optional PyPI publishing boundary.
-- [ ] Install/use `twine` and run `twine check`.
-- [ ] Run full local gates.
-- [ ] Commit release source with Lore Commit Protocol.
-- [ ] Create public GitHub repo `BoSuY0/HyrumGuard` and set `origin`.
-- [ ] Push default branch and tag `v1.0.0`.
-- [ ] Create public GitHub Release `v1.0.0` with wheel/sdist assets.
-- [ ] Verify public repo/release/assets from GitHub.
-- [ ] Update `GOAL.md` evidence and complete the active goal only if public evidence passes.
+- [x] Align goal/spec/docs/control with public-release scope.
+- [x] Add public-release readiness tests.
+- [x] Add tag-triggered release workflow and optional PyPI publishing boundary.
+- [x] Install/use `twine` and run `twine check`.
+- [x] Run full local gates.
+- [x] Commit release source with Lore Commit Protocol.
+- [x] Create public GitHub repo `BoSuY0/HyrumGuard` and set `origin`.
+- [x] Push default branch and tag `v1.0.0`.
+- [x] Create public GitHub Release `v1.0.0` with wheel/sdist assets.
+- [x] Verify public repo/release/assets from GitHub.
+- [x] Update `GOAL.md` evidence and complete the active goal only if public evidence passes.
 
 ## Task 1: Public Release Metadata
 
