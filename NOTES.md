@@ -10,3 +10,4 @@
 - Public release scope is GitHub-public source plus GitHub Release `v1.0.0` with wheel/sdist assets.
 - PyPI publication is not claimed because no PyPI/TestPyPI credentials or trusted-publisher proof are present.
 - The first tag-triggered release workflow failed before steps/logs were available; manual `gh release create` was used to complete the public release with the same verified local assets.
+- GitHub Actions is enabled for the repo, but job startup is blocked by an account billing lock; public CI will remain red until that external account issue is resolved.

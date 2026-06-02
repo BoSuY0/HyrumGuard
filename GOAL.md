@@ -158,6 +158,7 @@ Final response should include public repository URL, public release URL, release
 - 2026-06-02, PR-3.4 verified. evidence: `git ls-remote --tags origin` shows `refs/tags/v1.0.0` and peeled commit `3d3e63e8896a4c519d0cc8f2a84f7aca601a85fd`.
 - 2026-06-02, PR-3.5 verified. evidence: `gh release view v1.0.0 --repo BoSuY0/HyrumGuard` -> non-draft, non-prerelease, assets `hyrumguard-1.0.0.tar.gz` and `hyrumguard-1.0.0-py3-none-any.whl`.
 - 2026-06-02, PR-4.1 verified. evidence: GitHub API verified public repo URL `https://github.com/BoSuY0/HyrumGuard` and release URL `https://github.com/BoSuY0/HyrumGuard/releases/tag/v1.0.0` with uploaded assets.
+- 2026-06-02, public CI caveat recorded. evidence: GitHub check annotation says the job did not start because the account is locked due to a billing issue; local release gates passed and public release assets are verified.
 
 ### In Progress
 
@@ -166,9 +167,11 @@ _(none)_
 ### Blockers / Open Questions
 
 - Potential PyPI blocker: no `TWINE_*`/`PYPI_*` credentials were present; public GitHub release is the verified public-release channel unless credentials appear.
+- External CI caveat: GitHub Actions jobs cannot start while the GitHub account is locked due to a billing issue. This does not change the verified public GitHub Release state, but public CI will stay red until account billing is fixed.
 
 ### Iteration Log
 
 - 2026-06-02 18:00, Inspected public-release prerequisites: GitHub auth exists, repo name appears available, no remote/commits/tags exist, PyPI name appears unused, twine missing. next: add public-release metadata/docs/workflow/tests.
 - 2026-06-02 18:10, Added public-release docs/tests/workflow, updated URLs to `BoSuY0/HyrumGuard`, installed twine, and passed local public-release gates. next: commit, push, tag, and create GitHub Release.
 - 2026-06-02 18:20, Created public repo, pushed `main`, pushed tag `v1.0.0`, created public GitHub Release manually after release workflow startup failure, and verified both release assets. next: push evidence commit and final audit.
+- 2026-06-02 18:25, Verified public CI failures are caused by GitHub account billing lock before job steps start; public repo/release/assets remain verified. next: final completion audit.

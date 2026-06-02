@@ -20,3 +20,4 @@
 - Public publish: `gh repo create BoSuY0/HyrumGuard --public --source=. --remote=origin --push` succeeded and pushed `main`.
 - Public publish: tag `v1.0.0` was pushed. The tag-triggered release workflow failed before steps/logs were available, so release assets were published manually with `gh release create v1.0.0 ... --verify-tag`.
 - Public publish verification: GitHub API reported repo `BoSuY0/HyrumGuard` as `PUBLIC`; release `v1.0.0` is non-draft/non-prerelease and has wheel/sdist assets uploaded.
+- Public CI verification: both public Actions runs failed before steps; check-run annotations report the account is locked due to a billing issue. This is an external account-state failure, not a code/test failure.
