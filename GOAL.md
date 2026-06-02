@@ -67,7 +67,7 @@ Stop condition: keep opening the next small batch after CB-4 unless the user exp
 - [x] CB-1 Suppression policy works from config and reduces/report-marks risks without deleting audit evidence.
 - [x] CB-2 CLI `init` flow writes a starter `.hyrumguard.yml` safely and refuses to overwrite unless explicitly requested.
 - [x] CB-3 Docs explain suppressions, initialization, and the current architecture boundaries.
-- [ ] CB-4 Batch regression gates pass: pytest, ruff, mypy, build, twine check, and CLI smoke.
+- [x] CB-4 Batch regression gates pass: pytest, ruff, mypy, build, twine check, and CLI smoke.
 </done_when>
 
 <feedback_loop>
@@ -153,10 +153,11 @@ Interim responses should report the current task, commit hash, and verification 
 - 2026-06-02, CB-1 verified. evidence: suppression RED failed for missing parser/validator/analysis/canary/CLI behavior; GREEN passed with focused `10 passed`, full pytest `32 passed`, ruff clean, mypy clean.
 - 2026-06-02, CB-2 verified. evidence: `hyrumguard init` tests covered help/default config/custom path/overwrite refusal/explicit overwrite; full pytest `36 passed`, ruff clean, mypy clean.
 - 2026-06-02, CB-3 verified. evidence: `README.md`, `docs/reference/configuration.md`, and `docs/reference/architecture.md` document suppressions, init, and safety/architecture boundaries.
+- 2026-06-02, CB-4 verified. evidence: pytest `36 passed`; ruff clean; mypy clean; build created wheel/sdist; twine check PASSED; CLI help smoke `all-help-ok 8`; fixture flow with `init --path` and `check --config` exited 0.
 
 ### In Progress
 
-- 2026-06-02, CB-4 in progress. Bridge: run full release-style local gates and commit batch close evidence.
+- 2026-06-02, next batch opening in progress. Bridge: define the next measurable hardening batch, then continue with TDD.
 
 ### Blockers / Open Questions
 

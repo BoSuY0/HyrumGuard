@@ -14,3 +14,4 @@
 - Current hardening loop should keep the public release as historical baseline and open small verified batches. The user explicitly controls when the loop ends.
 - Suppressed risks stay in the risk artifact for auditability. Active risk counts use `summary.risk_count`; full matched counts use `summary.total_risk_count`.
 - Starter config lives in `hyrumguard.config.STARTER_CONFIG` so CLI initialization and tests share one canonical example.
+- First continuous hardening batch closed locally with release-style gates. Do not call the goal complete; open the next batch because the user asked the loop to continue.

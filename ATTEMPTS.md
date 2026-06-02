@@ -28,3 +28,4 @@
 - Init RED: focused CLI tests failed because `init` was not a registered subcommand and overwrite protection did not exist.
 - Init GREEN: focused CLI tests for help, default config, custom path, overwrite refusal, and explicit overwrite passed with `5 passed`.
 - Init broader gates: full pytest passed with `36 passed`; `ruff check .` passed; `mypy hyrumguard` passed.
+- Batch close gates: build succeeded, `twine check dist/*` passed, CLI help smoke returned `all-help-ok 8`, and fixture flow with generated starter config wrote 5 active risks, 0 suppressions, and 1 canary selection.
