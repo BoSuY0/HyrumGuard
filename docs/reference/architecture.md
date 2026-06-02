@@ -17,6 +17,7 @@ flowchart LR
     H --> L[Risk explainer]
     H --> I[Canary planner]
     H --> J[Reporters]
+    M[Doctor] --> N[Validators]
     J --> J1[JSON]
     J --> J2[Markdown]
     J --> J3[SARIF]
@@ -34,6 +35,7 @@ flowchart LR
 - `hyrumguard.canary`: plans or executes changed-only downstream checks.
 - `hyrumguard.reporters`: renders risk output as JSON, Markdown, and SARIF.
 - `hyrumguard.config`: loads config and provides the starter config used by `hyrumguard init`.
+- `hyrumguard.doctor`: wraps existing validators into a local readiness report.
 - `hyrumguard.cli`: exposes the product flow.
 
 ## Data Flow
@@ -45,7 +47,8 @@ flowchart LR
 5. Explain can render focused Markdown/JSON for selected risks by id or subject.
 6. Report writes Markdown/SARIF/JSON artifacts.
 7. Canary writes `.hyrum/canary.json` from active unsuppressed risks by default.
+8. Doctor can check selected config/artifact paths and render local diagnostics.
 
 ## Design Boundaries
 
-The implementation is analysis-first. It prioritizes explainable evidence and deterministic files over broad ecosystem coverage. Hosted PR comments, GitHub App state, GitLab App state, and hard sandbox orchestration are future work.
+The implementation is analysis-first. It prioritizes explainable evidence and deterministic files over broad ecosystem coverage. Doctor and explain commands read local artifacts only. Hosted PR comments, GitHub App state, GitLab App state, and hard sandbox orchestration are future work.

@@ -11,6 +11,7 @@ from hyrumguard.canary import plan_canary
 from hyrumguard.config import load_config, starter_config_text
 from hyrumguard.diff import git_diff, parse_unified_diff
 from hyrumguard.discovery import discover_dependents, parse_seed
+from hyrumguard.doctor import build_doctor_payload, render_doctor
 from hyrumguard.explain import explain_risks
 from hyrumguard.io import read_json, write_json, write_text
 from hyrumguard.miners import mine_repository
@@ -95,6 +96,16 @@ def build_parser() -> argparse.ArgumentParser:
     explain.add_argument("--format", choices=["markdown", "json"], default="markdown")
     explain.add_argument("--out")
     explain.set_defaults(func=cmd_explain)
+
+    doctor = subparsers.add_parser("doctor", help="run local readiness diagnostics for config and artifacts")
+    doctor.add_argument("--config")
+    doctor.add_argument("--dependents")
+    doctor.add_argument("--contracts")
+    doctor.add_argument("--risks")
+    doctor.add_argument("--sarif")
+    doctor.add_argument("--format", choices=["markdown", "json"], default="markdown")
+    doctor.add_argument("--out")
+    doctor.set_defaults(func=cmd_doctor)
 
     validate = subparsers.add_parser("validate", help="validate HyrumGuard config and artifact files")
     validate.add_argument("--config")
@@ -209,6 +220,23 @@ def cmd_explain(args: argparse.Namespace) -> int:
     else:
         print(rendered, end="")
     return 0
+
+
+def cmd_doctor(args: argparse.Namespace) -> int:
+    payload = build_doctor_payload(
+        config=args.config,
+        dependents=args.dependents,
+        contracts=args.contracts,
+        risks=args.risks,
+        sarif=args.sarif,
+    )
+    rendered = render_doctor(payload, args.format)
+    if args.out:
+        write_text(args.out, rendered)
+        print(f"wrote {args.format} doctor report to {args.out}")
+    else:
+        print(rendered, end="")
+    return 0 if payload["summary"]["status"] == "passed" else 1
 
 
 def cmd_validate(args: argparse.Namespace) -> int:

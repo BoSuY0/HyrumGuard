@@ -19,3 +19,4 @@
 - `explain` is intentionally separate from `report`: reports summarize the full risk artifact, explanations render targeted evidence for one selected id or subject.
 - Explainability batch closed locally with release-style gates. Do not call the goal complete; choose another focused batch.
 - Doctor should reuse existing validators and report failures as data. It should not replace `validate`; it should make setup/readiness easier to scan.
+- `doctor` returns exit code 1 for failed checks while still printing a structured report; this differs from validation exceptions returning 2.

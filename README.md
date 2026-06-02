@@ -26,6 +26,7 @@ Run the report flow:
 
 ```bash
 python -m hyrumguard.cli init
+python -m hyrumguard.cli doctor --config .hyrumguard.yml
 python -m hyrumguard.cli discover demo_lib --config .hyrumguard.yml --out .hyrum/dependents.json
 python -m hyrumguard.cli infer --from .hyrum/dependents.json --out .hyrum/shadow-contracts.lock.json
 python -m hyrumguard.cli check --contracts .hyrum/shadow-contracts.lock.json --diff-file tests/fixtures/sample.diff --config .hyrumguard.yml --out .hyrum/risks.json
@@ -40,6 +41,7 @@ The installed script exposes the same commands:
 
 ```bash
 hyrumguard init
+hyrumguard doctor --config .hyrumguard.yml
 hyrumguard discover demo_lib --config .hyrumguard.yml
 hyrumguard infer --from .hyrum/dependents.json
 hyrumguard check --base origin/main --head HEAD
@@ -50,6 +52,7 @@ hyrumguard report --format sarif --out hyrumguard.sarif
 ## Command Model
 
 - `init`: writes a starter `.hyrumguard.yml` and refuses to overwrite without `--overwrite`.
+- `doctor`: runs local readiness diagnostics for config and generated artifacts.
 - `discover`: collects manual seeds and optional ecosyste.ms dependent package data.
 - `infer`: scans dependent repositories and writes `.hyrum/shadow-contracts.lock.json`.
 - `check`: maps a git diff or explicit diff file to affected shadow contracts, with optional config-driven suppressions.
@@ -97,6 +100,17 @@ hyrumguard explain --risks .hyrum/risks.json --id risk-contract-id --format json
 ```
 
 Explanations include the risk id, subject, type, severity, changed locations, dependents, evidence snippets, related contracts, and suppression state.
+
+## Diagnostics
+
+Use `doctor` for a readable setup/CI readiness check. It reports pass/fail checks as Markdown by default and JSON for automation:
+
+```bash
+hyrumguard doctor --config .hyrumguard.yml --contracts .hyrum/shadow-contracts.lock.json --risks .hyrum/risks.json
+hyrumguard doctor --config .hyrumguard.yml --format json --out .hyrum/doctor.json
+```
+
+`doctor` reuses the same validators as `validate`, but returns a diagnostic report instead of stopping at the first selected malformed artifact.
 
 ## Documentation
 

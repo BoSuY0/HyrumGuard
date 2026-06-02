@@ -62,9 +62,9 @@ Stop condition: keep opening the next small batch after DB-3 unless the user exp
 </scorecard>
 
 <done_when>
-- [ ] DB-0 Durable goal/spec/plan/control state reflects doctor batch scope and is committed.
-- [ ] DB-1 CLI `doctor` renders selected config/artifact diagnostics in Markdown and JSON.
-- [ ] DB-2 Docs explain local diagnostics and current architecture boundaries.
+- [x] DB-0 Durable goal/spec/plan/control state reflects doctor batch scope and is committed.
+- [x] DB-1 CLI `doctor` renders selected config/artifact diagnostics in Markdown and JSON.
+- [x] DB-2 Docs explain local diagnostics and current architecture boundaries.
 - [ ] DB-3 Batch regression gates pass: pytest, ruff, mypy, build, twine check, and CLI smoke.
 </done_when>
 
@@ -156,10 +156,13 @@ Interim responses should report the current task, commit hash, and verification 
 - 2026-06-02, EB-1 verified. evidence: focused explain tests passed with `7 passed`; full pytest `42 passed`; ruff clean; mypy clean.
 - 2026-06-02, EB-2 verified. evidence: `README.md` documents `explain`; `docs/reference/architecture.md` includes `hyrumguard.explain` and the risk explainer data-flow step.
 - 2026-06-02, EB-3 verified. evidence: pytest `42 passed`; ruff clean; mypy clean; build created wheel/sdist; twine check PASSED; CLI help smoke `all-help-ok 9`; fixture flow with Markdown/JSON explain artifacts exited 0.
+- 2026-06-02, DB-0 verified. evidence: commit `7b7363e` opened doctor batch in `GOAL.md`, `SPEC.md`, `PLAN.md`, `CONTROL.md`, `ATTEMPTS.md`, and `NOTES.md`; `git diff --check` passed.
+- 2026-06-02, DB-1 verified. evidence: focused doctor tests passed with `7 passed`; full pytest `48 passed`; ruff clean; mypy clean.
+- 2026-06-02, DB-2 verified. evidence: `README.md` documents `doctor`; `docs/reference/architecture.md` includes `hyrumguard.doctor` and local diagnostics boundaries.
 
 ### In Progress
 
-- 2026-06-02, DB-0 in progress. Bridge: define doctor batch state, commit it, then start RED tests for `hyrumguard doctor`.
+- 2026-06-02, DB-3 in progress. Bridge: run full release-style gates and commit doctor batch close evidence.
 
 ### Blockers / Open Questions
 
@@ -173,3 +176,4 @@ Interim responses should report the current task, commit hash, and verification 
 - 2026-06-02, Explain RED failed on missing `hyrumguard.explain` module; GREEN focused explain suite passed with `7 passed`.
 - 2026-06-02, Explainability batch closed locally; next batch should improve operational readiness.
 - 2026-06-02, Doctor batch selected to improve local setup and CI-readiness diagnostics.
+- 2026-06-02, Doctor RED failed on missing `hyrumguard.doctor` module; GREEN focused doctor suite passed with `7 passed`.

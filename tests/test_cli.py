@@ -31,6 +31,7 @@ def test_cli_help_commands_exit_zero():
         ("validate", "--help"),
         ("init", "--help"),
         ("explain", "--help"),
+        ("doctor", "--help"),
     ]:
         result = run_cli(*args)
         assert result.returncode == 0, result.stderr
@@ -263,6 +264,39 @@ def test_cli_explain_missing_match_uses_concise_error(tmp_path):
     assert result.returncode == 2
     assert "no risks matched" in result.stderr
     assert "Traceback" not in result.stderr
+
+
+def test_cli_doctor_reports_passed_json(tmp_path):
+    config = tmp_path / ".hyrumguard.yml"
+    run_cli("init", "--path", str(config))
+
+    result = run_cli("doctor", "--config", str(config), "--format", "json")
+
+    payload = json.loads(result.stdout)
+    assert result.returncode == 0, result.stderr
+    assert payload["summary"]["status"] == "passed"
+    assert any(check["name"] == "config" and check["status"] == "passed" for check in payload["checks"])
+
+
+def test_cli_doctor_reports_failed_check_without_traceback(tmp_path):
+    result = run_cli("doctor", "--config", str(tmp_path / "missing.yml"), "--format", "json")
+
+    payload = json.loads(result.stdout)
+    assert result.returncode == 1
+    assert payload["summary"]["status"] == "failed"
+    assert "Traceback" not in result.stderr
+
+
+def test_cli_doctor_writes_markdown_report(tmp_path):
+    config = tmp_path / ".hyrumguard.yml"
+    output = tmp_path / "doctor.md"
+    run_cli("init", "--path", str(config))
+
+    result = run_cli("doctor", "--config", str(config), "--out", str(output))
+
+    assert result.returncode == 0, result.stderr
+    assert "wrote markdown doctor report" in result.stdout
+    assert "# HyrumGuard doctor" in output.read_text()
 
 
 def test_cli_canary_dry_run(tmp_path):
