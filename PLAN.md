@@ -1,48 +1,48 @@
-# HyrumGuard Explainability Batch Plan
+# HyrumGuard Doctor Batch Plan
 
-**Goal:** Add a risk explanation workflow so maintainers can inspect one finding without manually reading raw JSON.
+**Goal:** Add a local diagnostic command that summarizes config and artifact health for setup and CI readiness.
 
-**Context:** The first continuous hardening batch added suppressions, `init`, docs, and full gate evidence. The next useful day-two workflow is targeted explanation of existing risk artifacts.
+**Context:** Prior batches added suppressions, `init`, and targeted `explain`. The next useful stabilizer is an operational readiness command that wraps validation checks into a readable diagnostic report.
 
 **Execution:** Work task-by-task. For production behavior, use TDD. After every completed task, run fresh verification and commit with the Lore Commit Protocol fallback format from `AGENTS.md`.
 
-## Task 4: Open Explainability Batch
+## Task 7: Open Doctor Batch
 
-**Goal:** Replace the completed first-batch plan/spec/control with the next measurable batch.
+**Goal:** Replace the completed explainability batch plan/spec/control with the next measurable batch.
 
 **Files:** `GOAL.md`, `SPEC.md`, `PLAN.md`, `CONTROL.md`, `ATTEMPTS.md`, `NOTES.md`
 
-**Approach:** Keep first-batch evidence in `GOAL.md` progress and define the next batch around risk explanation.
+**Approach:** Keep previous evidence in `GOAL.md` progress and define the next batch around local diagnostics.
 
 **Verification:** `git diff --check`
 
-**Done when:** Durable state names explainability acceptance items and the task is committed.
+**Done when:** Durable state names doctor acceptance items and the task is committed.
 
-## Task 5: Risk Explain Command
+## Task 8: Doctor Command
 
-**Goal:** Add `hyrumguard explain` for targeted risk inspection.
+**Goal:** Add `hyrumguard doctor` for local diagnostic checks.
 
-**Files to inspect:** `hyrumguard/cli.py`, `hyrumguard/reporters/*`, `hyrumguard/io.py`, `tests/test_cli.py`, `tests/test_analysis_and_reports.py`, `tests/test_suppressions.py`
+**Files to inspect:** `hyrumguard/cli.py`, `hyrumguard/validation.py`, `hyrumguard/io.py`, `tests/test_cli.py`, `tests/test_release_readiness.py`
 
 **Approach:**
 
-- Add failing tests for matching by risk id, matching by subject, Markdown output, JSON output, `--out`, and missing-match errors.
-- Add a small explanation module if it keeps CLI wiring thin.
-- Render suppressed risks explicitly, including suppression id/reason.
-- Keep existing `report` output unchanged.
+- Add failing tests for all-pass Markdown output, failed-check JSON output, CLI return codes, and concise error behavior.
+- Add a small doctor module if it keeps CLI wiring thin.
+- Reuse existing validation functions instead of duplicating schema logic.
+- Keep `validate` behavior unchanged.
 
 **Verification:**
 
-- focused explain tests
+- focused doctor tests
 - `.venv/bin/python -m pytest -q`
 - `.venv/bin/python -m ruff check .`
 - `.venv/bin/python -m mypy hyrumguard`
 
-**Done when:** Explain behavior is tested, documented, and committed.
+**Done when:** Doctor behavior is tested, documented, and committed.
 
-## Task 6: Batch Close
+## Task 9: Batch Close
 
-**Goal:** Prove the explainability batch did not regress the release baseline.
+**Goal:** Prove the doctor batch did not regress the release baseline.
 
 **Files:** codebase and distribution artifacts
 

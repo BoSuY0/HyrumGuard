@@ -11,17 +11,18 @@
 
 ## Current Batch
 
-- EB-0: durable explainability batch state
-- EB-1: targeted `explain` command
-- EB-2: docs and architecture notes for explanation output
-- EB-3: full local regression gates
+- DB-0: durable doctor batch state
+- DB-1: local `doctor` command
+- DB-2: docs and architecture notes for diagnostics
+- DB-3: full local regression gates
 
 ## Safety Boundaries
 
 - Canary execution default: dry-run
 - Real downstream execution: explicit `--execute --allow-unsafe-execution` only
 - Suppressions must remain auditable and must not silently delete findings
-- `explain` reads existing local artifacts only; it must not fetch or execute downstream code
+- `explain` and `doctor` read existing local artifacts only
+- `doctor` must not fetch network data or execute downstream code
 - Generated runtime outputs stay out of git
 
 ## Pivot Gates

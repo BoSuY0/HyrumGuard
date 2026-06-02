@@ -34,3 +34,4 @@
 - Explain GREEN: focused tests for subject/id selection, Markdown/JSON rendering, `--out`, help, and missing-match errors passed with `7 passed`.
 - Explain broader gates: full pytest passed with `42 passed`; `ruff check .` passed; `mypy hyrumguard` passed.
 - Explain batch close gates: build succeeded, `twine check dist/*` passed, CLI help smoke returned `all-help-ok 9`, and fixture flow wrote Markdown/JSON explain artifacts with one matched explanation.
+- Doctor batch kickoff: selected local diagnostics as the next operational-readiness workflow.

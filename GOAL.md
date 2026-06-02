@@ -1,5 +1,5 @@
 <goal>
-Continuously harden HyrumGuard with user-visible functionality, broad regression tests, and cleaner architecture until the user explicitly ends the loop. The current batch focuses on targeted risk explainability for generated risk artifacts.
+Continuously harden HyrumGuard with user-visible functionality, broad regression tests, and cleaner architecture until the user explicitly ends the loop. The current batch focuses on local operational readiness diagnostics.
 </goal>
 
 <context>
@@ -16,7 +16,7 @@ Current product baseline:
 - Public repo: `https://github.com/BoSuY0/HyrumGuard`
 - Public release: `v1.0.0`
 - Package version: `1.0.0`
-- Existing CLI commands: `init`, `discover`, `infer`, `check`, `canary`, `report`, `validate`
+- Existing CLI commands: `init`, `discover`, `infer`, `check`, `explain`, `canary`, `report`, `validate`
 - Existing local gates: pytest, ruff, mypy, build, twine check, CLI help smoke, fixture smoke flow
 - Public GitHub Actions are blocked by an external billing lock before jobs start; local gates remain the trusted feedback loop until the account state is fixed.
 - No Graphify artifacts or callable Graphify MCP tools are currently available in this repo; normal repo inspection is the fallback.
@@ -53,19 +53,19 @@ Passing threshold for each task:
 - A Lore-style commit exists after the task.
 
 Current batch acceptance:
-- EB-0 Goal-loop state names the explainability batch and is committed.
-- EB-1 `hyrumguard explain` can select risks by id or subject and render Markdown/JSON with evidence and suppression state.
-- EB-2 Docs describe the explanation workflow and architecture boundaries.
-- EB-3 Full local gates pass after the batch.
+- DB-0 Goal-loop state names the doctor batch and is committed.
+- DB-1 `hyrumguard doctor` checks selected config/artifact paths and renders Markdown/JSON diagnostics.
+- DB-2 Docs describe the diagnostic workflow and architecture boundaries.
+- DB-3 Full local gates pass after the batch.
 
-Stop condition: keep opening the next small batch after EB-3 unless the user explicitly tells Codex to stop or finish.
+Stop condition: keep opening the next small batch after DB-3 unless the user explicitly tells Codex to stop or finish.
 </scorecard>
 
 <done_when>
-- [x] EB-0 Durable goal/spec/plan/control state reflects explainability batch scope and is committed.
-- [x] EB-1 CLI `explain` renders targeted risk evidence by id or subject in Markdown and JSON.
-- [x] EB-2 Docs explain targeted risk explanation and current architecture boundaries.
-- [x] EB-3 Batch regression gates pass: pytest, ruff, mypy, build, twine check, and CLI smoke.
+- [ ] DB-0 Durable goal/spec/plan/control state reflects doctor batch scope and is committed.
+- [ ] DB-1 CLI `doctor` renders selected config/artifact diagnostics in Markdown and JSON.
+- [ ] DB-2 Docs explain local diagnostics and current architecture boundaries.
+- [ ] DB-3 Batch regression gates pass: pytest, ruff, mypy, build, twine check, and CLI smoke.
 </done_when>
 
 <feedback_loop>
@@ -159,7 +159,7 @@ Interim responses should report the current task, commit hash, and verification 
 
 ### In Progress
 
-- 2026-06-02, next batch opening in progress. Bridge: define the next measurable hardening batch, then continue with TDD.
+- 2026-06-02, DB-0 in progress. Bridge: define doctor batch state, commit it, then start RED tests for `hyrumguard doctor`.
 
 ### Blockers / Open Questions
 
@@ -172,3 +172,4 @@ Interim responses should report the current task, commit hash, and verification 
 - 2026-06-02, First continuous hardening batch closed at commit `5b3fd2f`; next batch selected for targeted risk explainability.
 - 2026-06-02, Explain RED failed on missing `hyrumguard.explain` module; GREEN focused explain suite passed with `7 passed`.
 - 2026-06-02, Explainability batch closed locally; next batch should improve operational readiness.
+- 2026-06-02, Doctor batch selected to improve local setup and CI-readiness diagnostics.
