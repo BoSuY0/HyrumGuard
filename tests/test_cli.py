@@ -30,6 +30,7 @@ def test_cli_help_commands_exit_zero():
         ("report", "--help"),
         ("validate", "--help"),
         ("init", "--help"),
+        ("explain", "--help"),
     ]:
         result = run_cli(*args)
         assert result.returncode == 0, result.stderr
@@ -180,6 +181,88 @@ suppressions:
     assert payload["summary"]["risk_count"] == payload["summary"]["total_risk_count"] - 1
     assert suppressed["suppressed"] is True
     assert suppressed["suppression"]["id"] == "accepted-error-text"
+
+
+def test_cli_explain_writes_markdown_and_json(tmp_path):
+    risks = tmp_path / "risks.json"
+    markdown = tmp_path / "explanation.md"
+    as_json = tmp_path / "explanation.json"
+    payload = {
+        "schema_version": 1,
+        "summary": {"risk_count": 0, "total_risk_count": 1, "suppressed_count": 1},
+        "risks": [
+            {
+                "id": "risk-contract-1",
+                "subject": "missing token",
+                "type": "error_regex",
+                "severity": "medium",
+                "reason": "changed error text `missing token`",
+                "dependents": ["python-client"],
+                "contracts": [
+                    {
+                        "id": "contract-1",
+                        "type": "error_regex",
+                        "subject": "missing token",
+                        "confidence": 0.8,
+                    }
+                ],
+                "evidence": [
+                    {
+                        "dependent": "python-client",
+                        "path": "tests/test_usage.py",
+                        "line": 12,
+                        "snippet": "assert 'missing token' in message",
+                    }
+                ],
+                "locations": [{"path": "src/errors.py"}],
+                "suppressed": True,
+                "suppression": {
+                    "id": "accepted-error-text",
+                    "reason": "Accepted legacy client assertion while replacement ships.",
+                    "matched_on": ["subject", "type"],
+                },
+            }
+        ],
+    }
+    risks.write_text(json.dumps(payload))
+
+    markdown_result = run_cli(
+        "explain",
+        "--risks",
+        str(risks),
+        "--subject",
+        "missing token",
+        "--out",
+        str(markdown),
+    )
+    json_result = run_cli(
+        "explain",
+        "--risks",
+        str(risks),
+        "--id",
+        "risk-contract-1",
+        "--format",
+        "json",
+        "--out",
+        str(as_json),
+    )
+
+    assert markdown_result.returncode == 0, markdown_result.stderr
+    assert "wrote markdown explanation" in markdown_result.stdout
+    assert "Suppression: accepted-error-text" in markdown.read_text()
+    assert json_result.returncode == 0, json_result.stderr
+    assert json.loads(as_json.read_text())["summary"]["match_count"] == 1
+
+
+def test_cli_explain_missing_match_uses_concise_error(tmp_path):
+    risks = tmp_path / "risks.json"
+    risks.write_text(json.dumps({"schema_version": 1, "summary": {"risk_count": 0}, "risks": []}))
+
+    result = run_cli("explain", "--risks", str(risks), "--subject", "missing token")
+
+    assert result.returncode == 2
+    assert "no risks matched" in result.stderr
+    assert "Traceback" not in result.stderr
 
 
 def test_cli_canary_dry_run(tmp_path):

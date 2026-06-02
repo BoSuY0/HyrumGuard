@@ -11,6 +11,7 @@ from hyrumguard.canary import plan_canary
 from hyrumguard.config import load_config, starter_config_text
 from hyrumguard.diff import git_diff, parse_unified_diff
 from hyrumguard.discovery import discover_dependents, parse_seed
+from hyrumguard.explain import explain_risks
 from hyrumguard.io import read_json, write_json, write_text
 from hyrumguard.miners import mine_repository
 from hyrumguard.reporters import render_json, render_markdown, render_sarif
@@ -85,6 +86,15 @@ def build_parser() -> argparse.ArgumentParser:
     report.add_argument("--format", choices=["json", "markdown", "sarif"], required=True)
     report.add_argument("--out")
     report.set_defaults(func=cmd_report)
+
+    explain = subparsers.add_parser("explain", help="explain one or more matched risks from a risk artifact")
+    explain.add_argument("--risks", default=".hyrum/risks.json")
+    selector = explain.add_mutually_exclusive_group(required=True)
+    selector.add_argument("--id", dest="risk_id", help="risk id to explain")
+    selector.add_argument("--subject", help="risk subject to explain")
+    explain.add_argument("--format", choices=["markdown", "json"], default="markdown")
+    explain.add_argument("--out")
+    explain.set_defaults(func=cmd_explain)
 
     validate = subparsers.add_parser("validate", help="validate HyrumGuard config and artifact files")
     validate.add_argument("--config")
@@ -185,6 +195,17 @@ def cmd_report(args: argparse.Namespace) -> int:
     if args.out:
         write_text(args.out, rendered)
         print(f"wrote {args.format} report to {args.out}")
+    else:
+        print(rendered, end="")
+    return 0
+
+
+def cmd_explain(args: argparse.Namespace) -> int:
+    risks = read_json(args.risks)
+    rendered = explain_risks(risks, risk_id=args.risk_id, subject=args.subject, format_name=args.format)
+    if args.out:
+        write_text(args.out, rendered)
+        print(f"wrote {args.format} explanation to {args.out}")
     else:
         print(rendered, end="")
     return 0
