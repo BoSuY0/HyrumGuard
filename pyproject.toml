@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hyrumguard"
+version = "1.0.0"
+description = "Infer shadow contracts from downstream usage and report implicit compatibility risk."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{name = "HyrumGuard contributors"}]
+dependencies = []
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Software Development :: Quality Assurance",
+]
+
+[project.urls]
+Homepage = "https://github.com/BoSuY0/HyrumGuard"
+Documentation = "https://github.com/BoSuY0/HyrumGuard#readme"
+Source = "https://github.com/BoSuY0/HyrumGuard"
+Issues = "https://github.com/BoSuY0/HyrumGuard/issues"
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "build>=1", "ruff>=0.8", "mypy>=1", "twine>=6"]
+
+[project.scripts]
+hyrumguard = "hyrumguard.cli:main"
+
+[tool.setuptools]
+package-data = {"hyrumguard" = ["py.typed"]}
+
+[tool.setuptools.packages.find]
+include = ["hyrumguard*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+norecursedirs = ["tests/fixtures"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+exclude = ["tests/fixtures"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = false
+warn_unused_ignores = true
+warn_redundant_casts = true

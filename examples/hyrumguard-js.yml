@@ -1,0 +1,21 @@
+version: 1
+
+target:
+  ecosystem: npm
+  package: demo-lib
+
+discovery:
+  top_dependents: 8
+  ecosystems:
+    - manual
+  seeds:
+    - js-client=tests/fixtures/downstreams/js_client
+
+contracts:
+  confidence_threshold: 0.7
+
+canary:
+  enabled: true
+  affected_only: true
+  max_repositories: 8
+  timeout_seconds: 300

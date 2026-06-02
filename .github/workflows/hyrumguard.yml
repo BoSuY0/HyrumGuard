@@ -1,0 +1,49 @@
+name: hyrumguard
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install
+        run: python -m pip install -e '.[dev]'
+
+      - name: Test
+        run: pytest -q
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Type check
+        run: mypy hyrumguard
+
+      - name: Build
+        run: python -m build
+
+      - name: HyrumGuard smoke
+        run: |
+          python -m hyrumguard.cli discover demo_lib --config .hyrumguard.yml --out .hyrum/dependents.json
+          python -m hyrumguard.cli infer --from .hyrum/dependents.json --out .hyrum/shadow-contracts.lock.json
+          python -m hyrumguard.cli check --contracts .hyrum/shadow-contracts.lock.json --diff-file tests/fixtures/sample.diff --out .hyrum/risks.json
+          python -m hyrumguard.cli report --risks .hyrum/risks.json --format sarif --out hyrumguard.sarif
+          python -m hyrumguard.cli validate --dependents .hyrum/dependents.json --contracts .hyrum/shadow-contracts.lock.json --risks .hyrum/risks.json --sarif hyrumguard.sarif
+          python -m hyrumguard.cli canary --risks .hyrum/risks.json --dependents .hyrum/dependents.json --affected-only --out .hyrum/canary.json
+
+      - uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: hyrumguard.sarif

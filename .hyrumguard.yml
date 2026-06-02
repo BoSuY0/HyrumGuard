@@ -1,0 +1,31 @@
+version: 1
+
+target:
+  ecosystem: pypi
+  package: demo_lib
+
+discovery:
+  top_dependents: 8
+  ecosystems:
+    - manual
+  seeds:
+    - python-client=tests/fixtures/downstreams/python_client
+
+contracts:
+  infer:
+    - symbol_use
+    - private_symbol_use
+    - error_regex
+    - json_shape_expectation
+  confidence_threshold: 0.7
+
+canary:
+  enabled: true
+  affected_only: true
+  max_repositories: 8
+  timeout_seconds: 300
+
+reporting:
+  markdown: true
+  sarif: true
+  json_artifact: true

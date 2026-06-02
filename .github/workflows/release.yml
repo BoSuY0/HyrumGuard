@@ -1,0 +1,61 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install release dependencies
+        run: python -m pip install -e '.[dev]'
+
+      - name: Test
+        run: pytest -q
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Type check
+        run: mypy hyrumguard
+
+      - name: Build distributions
+        run: |
+          rm -rf dist build hyrumguard.egg-info
+          python -m build
+
+      - name: Check distributions
+        run: twine check dist/*
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/hyrumguard-*.tar.gz
+            dist/hyrumguard-*-py3-none-any.whl
+          fail_on_unmatched_files: true
+
+  publish-pypi:
+    needs: build-release
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - name: PyPI publishing is opt-in
+        run: echo "Configure PyPI Trusted Publishing, then remove if:false deliberately."
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

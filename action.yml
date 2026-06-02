@@ -1,0 +1,73 @@
+name: HyrumGuard
+description: Mine downstream shadow contracts and report implicit compatibility risks.
+inputs:
+  config:
+    description: Path to .hyrumguard.yml
+    required: false
+    default: .hyrumguard.yml
+  python-version:
+    description: Python version to use
+    required: false
+    default: "3.11"
+  dependents-output:
+    description: Dependents JSON output path
+    required: false
+    default: .hyrum/dependents.json
+  contracts-output:
+    description: Shadow contracts lockfile path
+    required: false
+    default: .hyrum/shadow-contracts.lock.json
+  risks-output:
+    description: Risk JSON output path
+    required: false
+    default: .hyrum/risks.json
+  markdown-output:
+    description: Markdown report output path
+    required: false
+    default: .hyrum/report.md
+  sarif-output:
+    description: SARIF output path
+    required: false
+    default: hyrumguard.sarif
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Install HyrumGuard
+      shell: bash
+      run: python -m pip install "${{ github.action_path }}"
+
+    - name: Discover dependents
+      shell: bash
+      run: python -m hyrumguard.cli discover . --config "${{ inputs.config }}" --out "${{ inputs.dependents-output }}"
+
+    - name: Infer shadow contracts
+      shell: bash
+      run: python -m hyrumguard.cli infer --from "${{ inputs.dependents-output }}" --out "${{ inputs.contracts-output }}"
+
+    - name: Check PR diff
+      shell: bash
+      run: |
+        BASE_REF="${GITHUB_BASE_REF:-main}"
+        python -m hyrumguard.cli check --contracts "${{ inputs.contracts-output }}" --base "origin/${BASE_REF}" --head HEAD --out "${{ inputs.risks-output }}"
+
+    - name: Render Markdown
+      shell: bash
+      run: python -m hyrumguard.cli report --risks "${{ inputs.risks-output }}" --format markdown --out "${{ inputs.markdown-output }}"
+
+    - name: Render SARIF
+      shell: bash
+      run: python -m hyrumguard.cli report --risks "${{ inputs.risks-output }}" --format sarif --out "${{ inputs.sarif-output }}"
+
+    - name: Validate artifacts
+      shell: bash
+      run: |
+        python -m hyrumguard.cli validate \
+          --config "${{ inputs.config }}" \
+          --dependents "${{ inputs.dependents-output }}" \
+          --contracts "${{ inputs.contracts-output }}" \
+          --risks "${{ inputs.risks-output }}" \
+          --sarif "${{ inputs.sarif-output }}"

@@ -1,0 +1,20 @@
+diff --git a/src/demo_lib/parser.py b/src/demo_lib/parser.py
+index 1111111..2222222 100644
+--- a/src/demo_lib/parser.py
++++ b/src/demo_lib/parser.py
+@@ -1,6 +1,6 @@
+ def parse_result(payload):
+-    raise ValueError("missing token")
++    raise ValueError("token is required")
+ 
+ def serialize(client):
+-    return {"status": "ok", "items": []}
++    return {"state": "ok", "items": []}
+diff --git a/src/demo_lib/_compat.py b/src/demo_lib/_compat.py
+index 3333333..4444444 100644
+--- a/src/demo_lib/_compat.py
++++ b/src/demo_lib/_compat.py
+@@ -1,2 +1,2 @@
+-def normalize_payload(payload):
++def normalize_legacy_payload(payload):
+     return payload

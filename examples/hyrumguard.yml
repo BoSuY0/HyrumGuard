@@ -1,0 +1,26 @@
+version: 1
+
+target:
+  ecosystem: pypi
+  package: requests
+
+discovery:
+  top_dependents: 40
+  ecosystems:
+    - pypi
+  seeds:
+    - local-fixture=tests/fixtures/downstreams/python_client
+
+contracts:
+  confidence_threshold: 0.72
+
+canary:
+  enabled: true
+  affected_only: true
+  max_repositories: 8
+  timeout_seconds: 300
+
+reporting:
+  markdown: true
+  sarif: true
+  json_artifact: true
