@@ -3,6 +3,8 @@
 ## Current Mode
 
 - Mode: continuous improvement after public `v1.0.0`
+- Public repository: `BoSuY0/HyrumGuard`
+- Public release: `v1.0.0`
 - User stop rule: continue until the user explicitly ends the work
 - Commit rule: commit after each completed task or TODO
 - Verification rule: no completion claim without fresh command evidence

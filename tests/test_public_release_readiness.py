@@ -39,10 +39,9 @@ def test_release_workflow_builds_checks_and_uploads_public_assets():
     assert "pypa/gh-action-pypi-publish" in workflow
 
 
-def test_release_plan_requires_public_verification():
-    goal = (ROOT / "GOAL.md").read_text()
-    plan = (ROOT / "PLAN.md").read_text()
+def test_release_docs_require_public_verification():
+    release_doc = (ROOT / "docs" / "reference" / "release.md").read_text()
 
-    assert "gh repo view BoSuY0/HyrumGuard" in goal
-    assert "gh release view v1.0.0 --repo BoSuY0/HyrumGuard" in goal
-    assert "Verify public repo/release/assets from GitHub" in plan
+    assert "gh repo view BoSuY0/HyrumGuard" in release_doc
+    assert "gh release view v1.0.0 --repo BoSuY0/HyrumGuard" in release_doc
+    assert "gh release view v1.0.0 --repo BoSuY0/HyrumGuard --json assets" in release_doc
